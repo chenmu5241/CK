@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>选择城市</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/font-awesome.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="css/app.css" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/vue.min.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/app.js"></script>
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		  <h1 class="mui-title">选择城市</h1>
+		</header>-->
+
+		<div class="mui-content city" id="vue1">
+			<div class="mui-col-xs-12" v-if="pointCity != null">
+				<h5>GPS定位</h5>
+				<a class=" mui-col-xs-3 mui-pull-left mui-text-center">
+					<img :src="pointCity.pictures" class="img-responsive img-circle" />{{pointCity.name}}
+				</a>
+				<div class="mui-clearfix"></div>
+			</div>
+
+			<div class="mui-col-xs-12" v-for="country in countries">
+				<h5>阿根廷</h5>
+				<a class="mui-col-xs-3 mui-pull-left mui-text-center" v-on:click="chooseCity(city)" v-for="city in country.cities">
+					<img :src="city.pictures" class=" img-responsive img-circle" />{{city.name}}
+				</a>
+				<div class="mui-clearfix"></div>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			var param = getRequest(); //得到url参数
+
+			var vue1 = new Vue({
+				el: '#vue1',
+				data: {
+					countries: [],
+					pointCity: null
+				},
+				updated: function() {
+					this.$nextTick(function() {
+
+					})
+				},
+				methods: {
+					chooseCity: function(event) {
+						console.log(event);
+						wx.miniProgram.navigateBack();
+					}
+				}
+			});
+
+			function loadCountryData() {
+				$.ajax({
+					dataType: "json",
+					type: "get",
+					url: basePath + "/services/allcities",
+					data: {},
+					success: function(result) {
+						if(result.status == 0) {
+							vue1.countries = result.result.countries;
+						}
+						var cities = result.result.cities
+						for(var i = 0; i < cities.length; i++) {
+							var city = cities[i];
+							if(param.cityName.indexOf(city.name) != -1) {
+								alert(city.name)
+								vue1.pointCity = city;
+							}
+						}
+					},
+					error: function(result) {
+						mui.toast("请求遇到问题!")
+					}
+				});
+			}
+			$(function() {
+				loadCountryData();
+			})
+		</script>
+
+	</body>
+
+</html>

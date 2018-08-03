@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>玩转CK小镇</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/font-awesome.css">
+		<!--<link rel="stylesheet" type="text/css" href="css/pulltorefresh.css" />-->
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="css/app.css" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/app.js"></script>
+		<!--		<script src="js/mui.pullToRefresh.js"></script>
+		<script src="js/mui.pullToRefresh.material.js"></script>-->
+		<script src="js/vue.min.js"></script>
+		<script src="js/dateUtil.js"></script>
+		<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">玩转CK小镇</h1>
+		</header>-->
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item col-sm-6 mui-active" href="#vue1">
+				<i class="fa fa-shopping-cart"></i>商城
+			</a>
+			<a class="mui-tab-item col-sm-6 " href="#vue2">
+				<i class="fa fa-user-o"></i>我的
+			</a>
+		</nav>
+		<div class="mui-content" id="mui-content">
+
+			<div id="vue1" class="mui-control-content mui-active" v-cloak="">
+				<div class="title pos-rel ">
+					<h4 class="mui-text-center">捷克-CK小镇</h4>
+					<div class="weather pos-abs"><i class=" fa fa-sun-o pull-left"></i>
+						<div>
+							<p>今天</p>
+							<p>27℃~34℃</p>
+						</div>
+					</div>
+					<a class="pos-abs changecity" id="chooseCityBtn">更换城市</a>
+				</div>
+
+				<div class="mui-card" v-for="(item, index) in data" v-bind:key="item.unionid">
+					<div class="mui-card-header mui-card-media pos-rel">
+						<img :src="item.audiopic" />
+						<div class=" mui-clearfix"></div>
+					</div>
+					<div class="mui-card-content pos-rel">
+						<div class="mui-card-content-inner">
+							<div class="innerbox">
+								<h5>{{item.linename}}</h5>
+								<p class="red">{{item.labels}}</p>
+							</div>
+							<div class="buy">
+								<div class="blue">{{item.price}}</div>
+								<a v-on:click="toBuy">购买</a>
+							</div>
+						</div>
+					</div>
+					<div class="mui-clearfix"></div>
+				</div>
+
+				<!--mui-card-->
+				<!--<div class="mui-card">
+					<div class="mui-card-header mui-card-media pos-rel">
+						<img src="images/raw_1531743689.png" />
+
+						<div class=" mui-clearfix"></div>
+					</div>
+					<div class="mui-card-content pos-rel">
+						<div class="mui-card-content-inner">
+							<div class="innerbox">
+								<h5>CK小镇浪漫童话之旅</h5>
+								<p class="red">赠送ck小镇语音导览</p>
+							</div>
+							<div class="buy">
+								<div class="blue">￥18</div>
+								<a>购买</a>
+							</div>
+						</div>
+					</div>
+					<div class="mui-clearfix"></div>
+				</div>
+				<div class="mui-card">
+					<div class="mui-card-header mui-card-media ">
+						<img src="images/raw_1531743738.png" />
+						<div class=" mui-clearfix"></div>
+					</div>
+					<div class="mui-card-content pos-rel">
+						<div class="mui-card-content-inner">
+							<div class="innerbox">
+								<h5>CK小镇浪漫童话之旅</h5>
+								<p class="red">赠送ck小镇语音导览</p>
+							</div>
+							<div class="buy">
+								<div class="blue">￥18</div>
+								<a href="">购买</a>
+							</div>
+						</div>
+					</div>
+					<div class="mui-clearfix"></div>
+				</div>-->
+
+				<!--//mui-card-->
+			</div>
+
+			<div id="vue2" class="mui-control-content">
+				<div class="mui-content my">
+					<div class="user">
+						<div class="img"><img :src="data.userInfo.avatarUrl"></div>
+						<div class="name">{{data.userInfo.nickName}}</div>
+						<div class="mui-clearfix"></div>
+					</div>
+
+					<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+						<a class="mui-control-item mui-col-xs-6 mui-active" href="#item1">
+							<div>我的订单</div>
+						</a>
+						<a class="mui-control-item mui-col-xs-6" href="#item2">
+							<div>语音导览</div>
+						</a>
+
+					</div>
+					<div>
+						<div id="item1" class="mui-control-content mui-active">
+							<div class="mui-card order">
+								<div class="mui-table-view">
+									<div class=" mui-media">
+										<a href="order.html">
+											<p class="orderno">订单编号:201705016265</p>
+											<div class="orderbox">
+												<div>
+													<h5>商品名称</h5>
+													<p>赠送ck语音导览</p>
+												</div>
+												<div class="blue ">￥18</div>
+												<div class="mui-clearfix"></div>
+											</div>
+										</a>
+										<div class="pay">2017-12-05 15:30<button class="mui-pull-right mui-btn mui-btn-yellow">去支付</button></div>
+									</div>
+								</div>
+							</div>
+							<div class="mui-card order">
+								<div class="mui-table-view">
+									<div class=" mui-media">
+										<a href="order.html">
+											<p class="orderno">订单编号:201705016265</p>
+											<div class="orderbox">
+												<div>
+													<h5>商品名称</h5>
+													<p>赠送ck语音导览</p>
+												</div>
+												<div class="blue">￥18</div>
+												<div class="mui-clearfix"></div>
+											</div>
+										</a>
+										<div class="pay">2017-12-05 15:30<button class="mui-pull-right mui-btn mui-btn-grey">已支付</button></div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+						<div id="item2" class="mui-control-content">
+							<div class="mui-card">
+								<div class="mui-table-view">
+									<div class="mui-table-view-cell mui-media">
+										<a href="javascript:;">
+											<img class="mui-media-object mui-pull-left" src="images/raw_1531743738.png">
+											<div class="mui-media-body">
+												<h5>CK艺术城堡之旅CK艺术城堡之旅CK艺术城堡之旅CK艺堡之旅CK艺术城堡之术城堡之</h5>
+												<span>国语</span><span>亲切</span>
+												<p>国家地区 城市名称</p>
+											</div>
+										</a>
+									</div>
+								</div>
+							</div>
+
+							<div class="mui-card ">
+								<div class="mui-table-view">
+									<div class="mui-table-view-cell mui-media">
+										<a href="javascript:;">
+											<img class="mui-media-object mui-pull-left" src="images/raw_1531743738.png">
+											<div class="mui-media-body">
+												<h5>CK艺术城堡之旅</h5>
+												<span>国语</span><span>亲切</span>
+												<p>国家地区 城市名称</p>
+
+											</div>
+										</a>
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<script type="text/javascript">
+			var vue1 = new Vue({
+				el: '#vue1',
+				data: {
+					data: []
+				},
+				updated: function() {
+					this.$nextTick(function() {
+
+					})
+				},
+				methods: {
+					toBuy: function() {
+						wx.miniProgram.navigateTo({
+							url: '/pages/utils/chooseImg'
+						});
+						return false;
+						wx.miniProgram.navigateTo({
+							url: '/pages/orderdetail/orderdetail'
+						})
+					}
+				}
+			});
+			var vue2 = new Vue({
+				el: '#vue2',
+				data: {
+					data: {
+						userInfo: {},
+						orderList: [],
+						audioList: []
+					}
+				},
+				updated: function() {
+					this.$nextTick(function() {
+
+					})
+				}
+			});
+
+			function loadCityData() {
+				$.ajax({
+					dataType: "json",
+					type: "get",
+					url: basePath + "/services/v2/city/765/customline/cityguide",
+					data: {},
+					success: function(result) {
+						console.log(result.result.customlines);
+						if(result.status == 0) {
+							vue1.data = result.result.customlines;
+						}
+					},
+					error: function(result) {
+						mui.toast("请求遇到问题!")
+					}
+				});
+			}
+
+			var userInfo = {
+				"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKTTLMBkrCduNtmqKMPyicZEhViaNF2naYdUeFwR3tGibv3KutErxwk9tqnwV6ibU6yS1ylWUBIR5YVaQ/132",
+				"city": "",
+				"country": "China",
+				"gender": 1,
+				"language": "zh_CN",
+				"nickName": "熊园昆",
+				"province": "Shanghai"
+			}
+
+			function initUserData() {
+				//用户个人信息
+				if(myLocalStorage.getItem("userInfo") != null) {
+					vue2.data.userInfo = myLocalStorage.getItem("userInfo");
+				} else {
+					vue2.data.userInfo = userInfo;
+				}
+			}
+
+			mui.init();
+			mui.ready(function() {
+				loadCityData();
+				initUserData();
+
+				mui("body").on("tap", "#chooseCityBtn", function() {
+					wx.miniProgram.navigateTo({
+						url: '/pages/city/city'
+					})
+				})
+
+				var param = getRequest();
+				myLocalStorage.setItem("openid", param.openid);
+				myLocalStorage.setItem("userInfo", $.parseJSON(param.userInfo));
+				//				alert(param.userInfo);
+			})
+		</script>
+	</body>
+
+</html>
