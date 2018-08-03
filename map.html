@@ -18,11 +18,10 @@
 	</head>
 
 	<body>
-
-		<header class="mui-bar mui-bar-nav ">
+		<!--<header class="mui-bar mui-bar-nav ">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">CK小镇浪漫童话之旅</h1>
-		</header>
+		</header>-->
 		<nav class="mui-bar mui-bar-tab no-border">
 			<div class="pos-fix">
 				<div class="line mui-text-center">请教<br/>行家</div>
@@ -123,17 +122,17 @@
 		<script src="js/jquery.min.js"></script>
 		<script src="js/swiper.js"></script>
 		<script type="text/javascript">
-			$("#container").height($(window).height()-$("header").height()-$(".mui-bar-tab").height())
-		    //初始化地图函数  自定义函数名init
-		    function init() {
-		        //定义map变量 调用 qq.maps.Map() 构造函数   获取地图显示容器
-		         var map = new qq.maps.Map(document.getElementById("container"), {
-		            center: new qq.maps.LatLng(39.916527,116.397128),      // 地图的中心地理坐标。
-		            zoom:8                                                 // 地图的中心地理坐标。
-		        });
-		    }
-		    
-		    init();
+			$("#container").height($(window).height() - $("header").height() - $(".mui-bar-tab").height())
+			//初始化地图函数  自定义函数名init
+			function init() {
+				//定义map变量 调用 qq.maps.Map() 构造函数   获取地图显示容器
+				var map = new qq.maps.Map(document.getElementById("container"), {
+					center: new qq.maps.LatLng(39.916527, 116.397128), // 地图的中心地理坐标。
+					zoom: 8 // 地图的中心地理坐标。
+				});
+			}
+
+			init();
 
 			$(".faplay").on("click", function() {
 				if($(this).hasClass('fa-play-circle')) {
