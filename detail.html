@@ -7,7 +7,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-
 		<!--标准mui.css-->
 		<link rel="stylesheet" href="css/mui.min.css">
 		<link rel="stylesheet" href="css/style.css">
@@ -33,18 +32,18 @@
 			</a>
 
 		</nav>
-		<div class="mui-content detail">
+		<div class="mui-content detail" id="content">
 			<img src="images/raw_1531743738.png" class=" img-responsive" />
 			<div class="mui-table-view">
 				<div class="mui-media">
 					<h4>水上威尼斯，盘点意大利那些精致小镇</h4>
 					<div class="mui-inline"><span>国语</span><span>亲切</span></div>
 					<div class="icons mui-inline">
-						<i data-index="1" class="fa fa-star"></i>
-						<i data-index="2" class="fa fa-star"></i>
-						<i data-index="3" class="fa fa-star"></i>
-						<i data-index="4" class="fa fa-star"></i>
-						<i data-index="5" class="fa fa-star-o"></i>
+						<i data-index="1" class="fa" :class="data.score>=1?'fa-star':'fa-star-o'"></i>
+						<i data-index="2" class="fa" :class="data.score>=2?'fa-star':'fa-star-o'"></i>
+						<i data-index="3" class="fa" :class="data.score>=3?'fa-star':'fa-star-o'"></i>
+						<i data-index="4" class="fa" :class="data.score>=4?'fa-star':'fa-star-o'"></i>
+						<i data-index="5" class="fa" :class="data.score>=5?'fa-star':'fa-star-o'"></i>
 					</div>
 					<p>欧洲工作生活多年，深度自助旅行过欧美亚30个国家260多个城市的资深玩家，胆大心细爱收集，最大的</p>
 					<div class=" mui-col-sm-12">
@@ -222,6 +221,55 @@
 					$(".app-voice-state").addClass("app-voice-play")
 					audio.play();
 				}
+			})
+			
+			var vue1 = new Vue({
+				el: '#content',
+				data: {
+					data:{
+						score:1
+					}
+				},
+				updated: function() {
+					this.$nextTick(function() {
+
+					})
+				},
+				methods: {
+					chooseCity: function(event) {
+						wx.miniProgram.navigateBack();
+					}
+				}
+			});
+
+			function loadCountryData() {
+				$.ajax({
+					dataType: "json",
+					type: "get",
+					url: basePath + "/services/allcities",
+					data: {},
+					success: function(result) {
+						if(result.status == 0) {
+							vue1.countries = result.result.countries;
+						}
+						var cities = result.result.cities
+						for(var i = 0; i < cities.length; i++) {
+							var city = cities[i];
+							if(param.cityName.indexOf(city.name) != -1) {
+								alert(city.name)
+								vue1.pointCity = city;
+							}
+						}
+					},
+					error: function(result) {
+						mui.toast("请求遇到问题!")
+					}
+				});
+			}
+			
+			mui.init();
+			mui.ready(function() {
+
 			})
 		</script>
 	</body>

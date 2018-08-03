@@ -23,10 +23,10 @@
 
 	<body>
 
-		<header class="mui-bar mui-bar-nav ">
+		<!--<header class="mui-bar mui-bar-nav ">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">CK小镇浪漫童话之旅</h1>
-		</header>
+		</header>-->
 		<nav class="mui-bar mui-bar-tab no-border">
 			<div class="mui-slider navigation">
 				<div class="pos-fix">
@@ -41,15 +41,13 @@
 								<a><i class=" fa fa-location-arrow"></i></a>
 							</div>
 						</div>
-
 					</div>
-
-					<div class="mui-slider-item">
+					<!--<div class="mui-slider-item">
 						1777680780
 					</div>
 					<div class="mui-slider-item">
 						1777680780
-					</div>
+					</div>-->
 				</div>
 			</div>
 			</div>
@@ -59,8 +57,57 @@
 			<div class="pos-rel"> <img src="images/staticmap_zh-CN.png" class=" img-responsive" />
 				<i class=" fa fa-map-marker red"></i>
 			</div>
-
 		</div>
+		
+		<script type="text/javascript">
+			var vue1 = new Vue({
+				el: '#content',
+				data: {
+					data:{}
+				},
+				updated: function() {
+					this.$nextTick(function() {
+
+					})
+				},
+				methods: {
+					chooseCity: function(event) {
+						wx.miniProgram.navigateBack();
+					}
+				}
+			});
+
+			function loadCountryData() {
+				$.ajax({
+					dataType: "json",
+					type: "get",
+					url: basePath + "/services/allcities",
+					data: {},
+					success: function(result) {
+						if(result.status == 0) {
+							vue1.countries = result.result.countries;
+						}
+						var cities = result.result.cities
+						for(var i = 0; i < cities.length; i++) {
+							var city = cities[i];
+							if(param.cityName.indexOf(city.name) != -1) {
+								alert(city.name)
+								vue1.pointCity = city;
+							}
+						}
+					},
+					error: function(result) {
+						mui.toast("请求遇到问题!")
+					}
+				});
+			}
+			
+			mui.init();
+			mui.ready(function() {
+
+			})
+				
+		</script>
 	</body>
 
 </html>

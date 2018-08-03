@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<title>my</title>
@@ -35,7 +34,7 @@
 				</a>
 			</nav>
 		</nav>
-		<div class="mui-content my">
+		<div class="mui-content my" id="content">
 			<div class="user">
 				<div class="img"><i class="fa fa-user-o"></i></div>
 				<div class="name">用户昵称</div>
@@ -125,6 +124,53 @@
 			</div>
 		</div>
 		<script type="text/javascript">
+			var vue1 = new Vue({
+				el: '#content',
+				data: {
+					data:{}
+				},
+				updated: function() {
+					this.$nextTick(function() {
+
+					})
+				},
+				methods: {
+					chooseCity: function(event) {
+						wx.miniProgram.navigateBack();
+					}
+				}
+			});
+
+			function loadCountryData() {
+				$.ajax({
+					dataType: "json",
+					type: "get",
+					url: basePath + "/services/allcities",
+					data: {},
+					success: function(result) {
+						if(result.status == 0) {
+							vue1.countries = result.result.countries;
+						}
+						var cities = result.result.cities
+						for(var i = 0; i < cities.length; i++) {
+							var city = cities[i];
+							if(param.cityName.indexOf(city.name) != -1) {
+								alert(city.name)
+								vue1.pointCity = city;
+							}
+						}
+					},
+					error: function(result) {
+						mui.toast("请求遇到问题!")
+					}
+				});
+			}
+			
+			mui.init();
+			mui.ready(function() {
+
+			})
+				
 		</script>
 	</body>
 

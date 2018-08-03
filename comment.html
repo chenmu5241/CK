@@ -31,18 +31,17 @@
 			<a class="mui-col-xs-12 mui-btn mui-btn-blue" href="#">
 				写点评
 			</a>
-
 		</nav>
-		<div class="mui-content detail comcontainer">
+		<div class="mui-content detail comcontainer" id="content" v-cloak>
 			<div class="mui-media">
 				<h5>水上威尼斯，盘点意大利那些精致小镇</h5>
 				<div class="icons mui-inline">
-					4.8
-					<i data-index="1" class="fa fa-star"></i>
-					<i data-index="2" class="fa fa-star"></i>
-					<i data-index="3" class="fa fa-star"></i>
-					<i data-index="4" class="fa fa-star"></i>
-					<i data-index="5" class="fa fa-star-o"></i>
+					{{gScore}}
+					<i data-index="1" class="fa" :class="gScore>=1?'fa-star':'fa-star-o'"></i>
+					<i data-index="2" class="fa" :class="gScore>=2?'fa-star':'fa-star-o'"></i>
+					<i data-index="3" class="fa" :class="gScore>=3?'fa-star':'fa-star-o'"></i>
+					<i data-index="4" class="fa" :class="gScore>=4?'fa-star':'fa-star-o'"></i>
+					<i data-index="5" class="fa" :class="gScore>=5?'fa-star':'fa-star-o'"></i>
 				</div>
 				<p>401人评论</p>
 			</div>
@@ -50,96 +49,79 @@
 			<div class="comment mui-table-view">
 
 				<div class=" mui-col-xs-12">
-					<div class="commentbox">
+					<div class="commentbox" v-for="item in comments">
 						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
 						</div>
 						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
+							<h5>{{item.userName}}<span>{{item.time}}</span></h5>
 							<div class="icons mui-inline">
-								<i data-index="1" class="fa fa-star"></i>
-								<i data-index="2" class="fa fa-star"></i>
-								<i data-index="3" class="fa fa-star"></i>
-								<i data-index="4" class="fa fa-star"></i>
-								<i data-index="5" class="fa fa-star-o"></i>
+								<i data-index="1" class="fa" :class="item.score>=1?'fa-star':'fa-star-o'"></i>
+								<i data-index="2" class="fa" :class="item.score>=2?'fa-star':'fa-star-o'"></i>
+								<i data-index="3" class="fa" :class="item.score>=3?'fa-star':'fa-star-o'"></i>
+								<i data-index="4" class="fa" :class="item.score>=4?'fa-star':'fa-star-o'"></i>
+								<i data-index="5" class="fa" :class="item.score>=5?'fa-star':'fa-star-o'"></i>
 							</div>
 						</div>
-						<p>自驾是最能感受法国小镇的交通方式，像很多薰衣草花田和向日葵花田是不通公共交通的，最好选择一日游或者自驾的方式</p>
-						<div class=" mui-pull-right"><i class=" fa fa-thumbs-o-up"></i>12</div>
-					</div>
-					<div class="commentbox">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
-						</div>
-						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
-							<div class="icons mui-inline">
-								<i data-index="1" class="fa fa-star"></i>
-								<i data-index="2" class="fa fa-star"></i>
-								<i data-index="3" class="fa fa-star"></i>
-								<i data-index="4" class="fa fa-star"></i>
-								<i data-index="5" class="fa fa-star-o"></i>
-							</div>
-						</div>
-						<p>讲的太好了</p>
-						<div class=" mui-pull-right"><i class=" fa fa-thumbs-up blue"></i>12</div>
-					</div>
-					<div class="commentbox">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
-						</div>
-						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
-							<div class="icons mui-inline">
-								<i data-index="1" class="fa fa-star"></i>
-								<i data-index="2" class="fa fa-star"></i>
-								<i data-index="3" class="fa fa-star"></i>
-								<i data-index="4" class="fa fa-star"></i>
-								<i data-index="5" class="fa fa-star-o"></i>
-							</div>
-						</div>
-						<p>讲的太好了</p>
-						<div class=" mui-pull-right"><i class=" fa fa-thumbs-o-up"></i>12</div>
-					</div>
-					<div class="commentbox">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
-						</div>
-						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
-							<div class="icons mui-inline">
-								<i data-index="1" class="fa fa-star"></i>
-								<i data-index="2" class="fa fa-star"></i>
-								<i data-index="3" class="fa fa-star"></i>
-								<i data-index="4" class="fa fa-star"></i>
-								<i data-index="5" class="fa fa-star-o"></i>
-							</div>
-						</div>
-						<p>讲的太好了</p>
-						<div class=" mui-pull-right"><i class=" fa fa-thumbs-o-up"></i>12</div>
-					</div>
-					<div class="commentbox">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
-						</div>
-						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
-							<div class="icons mui-inline">
-								<i data-index="1" class="fa fa-star"></i>
-								<i data-index="2" class="fa fa-star"></i>
-								<i data-index="3" class="fa fa-star"></i>
-								<i data-index="4" class="fa fa-star"></i>
-								<i data-index="5" class="fa fa-star-o"></i>
-							</div>
-						</div>
-						<p>讲的太好了</p>
-						<div class=" mui-pull-right"><i class=" fa fa-thumbs-o-up"></i>12</div>
+						<p>{{item.content}}</p>
+						<div class=" mui-pull-right"><i class=" fa fa-thumbs-up"></i>12</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
-		</div>
+		<script type="text/javascript">
+			var vue1 = new Vue({
+				el: '#content',
+				data: {
+					comments: [{
+						userName: "方静静",
+						time: "2018-08-03",
+						content: "这是评价内容",
+						score:4
+					}],
+					gScore:3
+				},
+				updated: function() {
+					this.$nextTick(function() {
+
+					})
+				},
+				methods: {
+					chooseCity: function(event) {
+						wx.miniProgram.navigateBack();
+					}
+				}
+			});
+
+			function loadCountryData() {
+				$.ajax({
+					dataType: "json",
+					type: "get",
+					url: basePath + "/services/allcities",
+					data: {},
+					success: function(result) {
+						if(result.status == 0) {
+							vue1.countries = result.result.countries;
+						}
+						var cities = result.result.cities
+						for(var i = 0; i < cities.length; i++) {
+							var city = cities[i];
+							if(param.cityName.indexOf(city.name) != -1) {
+								alert(city.name)
+								vue1.pointCity = city;
+							}
+						}
+					},
+					error: function(result) {
+						mui.toast("请求遇到问题!")
+					}
+				});
+			}
+			
+			mui.init();
+			mui.ready(function() {
+
+			})
+		</script>
 	</body>
 
 </html>

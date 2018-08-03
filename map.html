@@ -53,13 +53,13 @@
 										<img src="images/raw_1531745438.png" class=" img-responsive" />
 									</div>
 									<div class="swiper-slide">
-										<img src="images/muwu.jpg" class=" img-responsive" />
+										<img src="images/raw_1531745438.png" class=" img-responsive" />
 									</div>
 									<div class="swiper-slide">
 										<img src="images/raw_1531745438.png" class=" img-responsive" />
 									</div>
 									<div class="swiper-slide">
-										<img src="images/muwu.jpg" class=" img-responsive" />
+										<img src="images/raw_1531745438.png" class=" img-responsive" />
 									</div>
 								</div>
 							</div>
@@ -73,9 +73,9 @@
 									</div>
 									<div class="swiper-slide">
 										<div class="slideimg">
-											<img src="images/muwu.jpg" class=" img-responsive" /> 讲解点名称
+											<img src="images/raw_1531745438.png" class=" img-responsive" /> 讲解点名称
 										</div>
-										<img src="images/walk.png" class="walk" />
+										<img src="images/raw_1531745438.png" class="walk" />
 									</div>
 									<div class="swiper-slide">
 										<div class="slideimg">
@@ -85,7 +85,7 @@
 									</div>
 									<div class="swiper-slide">
 										<div class="slideimg">
-											<img src="images/muwu.jpg" class=" img-responsive" /> 讲解点名称
+											<img src="images/raw_1531745438.png" class=" img-responsive" /> 讲解点名称
 										</div>
 										<img src="images/walk.png" class="walk" />
 									</div>
@@ -94,12 +94,12 @@
 						</div>
 					</div>
 
-					<div class="mui-slider-item">
+					<!--<div class="mui-slider-item">
 						1777680780
 					</div>
 					<div class="mui-slider-item">
 						1777680780
-					</div>
+					</div>-->
 				</div>
 			</div>
 			</div>
@@ -162,12 +162,34 @@
 			galleryTop.controller.control = galleryThumbs;
 			galleryThumbs.controller.control = galleryTop;
 
-			mui("body").on("swipeup", ".mui-slider", function() {
+			mui("body").on("swipeup", ".mui-slider", function(e) {
 				$('.travelbox').addClass('travelshow');
 				$('.pos-fix').addClass('pos-fixa');
 				var h = $('.mui-slider ').height();
 				$('.pos-fixa').css("bottom", (h + 15));
 			})
+			mui("body").on("swipedown", ".mui-slider", function(e) {
+				$('.travelbox').removeClass('travelshow');
+				var h = $('.mui-slider ').height();
+				$('.pos-fixa').css("bottom","74px");
+				$('.pos-fix').removeClass('pos-fixa');
+			})
+			
+			/*mui("body").on("drag", ".mui-slider", function(e) {
+				if($('.travelbox').hasClass("travelshow")){
+					$('.travelbox').removeClass('travelshow');
+					$('.pos-fix').removeClass('pos-fixa');
+					var h = $('.mui-slider ').height();
+					$('.pos-fixa').css("bottom", (h + 15));
+				}else{
+					$('.travelbox').addClass('travelshow');
+					$('.pos-fix').addClass('pos-fixa');
+					var h = $('.mui-slider ').height();
+					$('.pos-fixa').css("bottom", (h + 15));
+				}
+			})*/
+			
+			
 		</script>
 	</body>
 
