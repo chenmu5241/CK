@@ -43,7 +43,7 @@
 						<div class="mui-slider-box pos-rel">
 							<h5>1.观景台--三维地图</h5>
 							<div class="pos-abs location">
-								<a><i class=" fa fa-location-arrow"></i></a>
+								<a  ><i class=" fa fa-location-arrow"></i></a>
 							</div>
 						</div>
 					</div>
@@ -104,7 +104,10 @@
             //设置驾驶路线的起点和终点
             drivingService.search(start, end);
         }
-        window.onload = search;
+        
+        mui.ready(function(){
+        	search();
+        })
 				
 		</script>
 	</body>

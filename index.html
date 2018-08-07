@@ -46,7 +46,7 @@
 							<p>27℃~34℃</p>
 						</div>
 					</div>
-					<a class="pos-abs changecity" id="chooseCityBtn">更换城市</a>
+					<a class="pos-abs changecity" id="chooseCityBtn" v-on:click="toCity">更换城市</a>
 				</div>
 
 				<div class="mui-card" v-for="(item, index) in data" v-bind:key="item.unionid">
@@ -169,6 +169,7 @@
 		</div>
 
 		<script type="text/javascript">
+			
 			function toDetail(id){
 				myLocalStorage.setItem("townId",id);
 				wx.miniProgram.navigateTo({
@@ -202,6 +203,11 @@
 						myLocalStorage.setItem("townId",id);
 						wx.miniProgram.navigateTo({
 							url: '/pages/detail/detail'
+						})
+					},
+					toCity:function(){
+						wx.miniProgram.navigateTo({
+							url: '/pages/city/city'
 						})
 					}
 				}
@@ -267,31 +273,15 @@
 				}
 			}
 
-			mui.init();
+//			mui.init();
 			mui.ready(function() {
 				loadCityData();
-				initUserData();
-
-				/*mui("body").on("tap",".mui-card-header",function(){
-					myLocalStorage.setItem("town",$(this).attr("townid"));
-					wx.miniProgram.navigateTo({
-						url: '/pages/detail/detail'
-					})
-				})*/
-				
-				mui("body").on("tap", "#chooseCityBtn", function() {
-					wx.miniProgram.navigateTo({
-						url: '/pages/city/city'
-					})
-				})
-
 				var param = getRequest();
 				if(param.userInfo) {
 					myLocalStorage.setItem("openid", param.openid);
 					myLocalStorage.setItem("userInfo", $.parseJSON(param.userInfo));
 				}
-
-				//				alert(param.userInfo);
+				initUserData();
 			})
 		</script>
 	</body>
