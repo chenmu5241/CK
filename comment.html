@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>用户点评</title>
+		<!--<title>用户点评</title>-->
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -28,7 +28,7 @@
 			<h1 class="mui-title">用户点评</h1>
 		</header>-->
 		<nav class="mui-bar mui-bar-tab no-border">
-			<a class="mui-col-xs-12 mui-btn mui-btn-blue" href="#">
+			<a class="mui-col-xs-12 mui-btn mui-btn-blue" onclick="toWriteComment()">
 				写点评
 			</a>
 		</nav>
@@ -69,6 +69,12 @@
 			</div>
 		</div>
 		<script type="text/javascript">
+			function toWriteComment(){
+				wx.miniProgram.navigateTo({
+					url: '/pages/writecomment/writecomment'
+				})
+			}
+			
 			var vue1 = new Vue({
 				el: '#content',
 				data: {

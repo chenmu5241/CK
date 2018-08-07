@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>讲解详情</title>
+		<!--<title>讲解详情</title>-->
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -27,7 +27,7 @@
 			<h1 class="mui-title">CK小镇浪漫童话之旅</h1>
 		</header>-->
 		<nav class="mui-bar mui-bar-tab">
-			<a class=" mui-btn mui-btn-blue mui-col-xs-12" href="#">
+			<a class=" mui-btn mui-btn-blue mui-col-xs-12" onclick="toRadio()">
 				<i class="fa fa-play-circle-o"></i>试听
 			</a>
 
@@ -148,7 +148,7 @@
 						<p>讲的太好了</p>
 					</div>
 				</div>
-				<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 ">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 " onclick="toComment()">
 					查看全部用户点评
 				</button>
 			</div>
@@ -201,7 +201,7 @@
 							<span class=" mui-pull-right">16人收听</span>
 						</div>
 					</div>
-					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 ">
+					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 " onclick="toQuestion()">
 					查看全部用户提问
 				</button>
 				</div>
@@ -209,6 +209,22 @@
 			</div>
 		</div>
 		<script type="text/javascript">
+			function toRadio(){
+				wx.miniProgram.navigateTo({
+					url: '/pages/map/map'
+				})
+			}
+			function toComment(){
+				wx.miniProgram.navigateTo({
+					url: '/pages/comment/comment'
+				})
+			}
+			function toQuestion(){
+				wx.miniProgram.navigateTo({
+					url: '/pages/question/question'
+				})
+			}
+			
 			var audio = document.getElementById("audio");
 			$(".app-voice-you").on("click", function() {
 				if($(".app-voice-state").hasClass("app-voice-play")) {

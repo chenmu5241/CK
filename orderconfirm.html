@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>订单确认</title>
+		<!--<title>订单确认</title>-->
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -26,7 +26,7 @@
 			<h1 class="mui-title">订单确认</h1>
 		</header>-->
 		<nav class="mui-bar mui-bar-tab no-border">
-			<a class=" mui-col-xs-12 mui-btn mui-btn-blue" href="#">
+			<a class=" mui-col-xs-12 mui-btn mui-btn-blue"  onclick="toPayment()">
 				立即支付
 			</a>
 		</nav>
@@ -80,6 +80,12 @@
 
 		</div>
 		<script type="text/javascript" charset="utf-8">
+		
+			function toPayment(){
+				wx.miniProgram.navigateTo({
+					url: '/pages/payment/payment'
+				})
+			}
 			mui.plusReady(function() {
 				//获得slider插件对象
 				var gallery = mui('.mui-slider');
@@ -130,10 +136,6 @@
 				});
 			}
 			
-			mui.init();
-			mui.ready(function() {
-
-			})
 				
 		</script>
 	</body>

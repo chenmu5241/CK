@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>玩转CK小镇</title>
+		<!--<title>玩转CK小镇</title>-->
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -50,7 +50,7 @@
 				</div>
 
 				<div class="mui-card" v-for="(item, index) in data" v-bind:key="item.unionid">
-					<div class="mui-card-header mui-card-media pos-rel">
+					<div class="mui-card-header mui-card-media pos-rel" v-on:click="toDetail(index)" >
 						<img :src="item.audiopic" />
 						<div class=" mui-clearfix"></div>
 					</div>
@@ -68,48 +68,6 @@
 					</div>
 					<div class="mui-clearfix"></div>
 				</div>
-
-				<!--mui-card-->
-				<!--<div class="mui-card">
-					<div class="mui-card-header mui-card-media pos-rel">
-						<img src="images/raw_1531743689.png" />
-
-						<div class=" mui-clearfix"></div>
-					</div>
-					<div class="mui-card-content pos-rel">
-						<div class="mui-card-content-inner">
-							<div class="innerbox">
-								<h5>CK小镇浪漫童话之旅</h5>
-								<p class="red">赠送ck小镇语音导览</p>
-							</div>
-							<div class="buy">
-								<div class="blue">￥18</div>
-								<a>购买</a>
-							</div>
-						</div>
-					</div>
-					<div class="mui-clearfix"></div>
-				</div>
-				<div class="mui-card">
-					<div class="mui-card-header mui-card-media ">
-						<img src="images/raw_1531743738.png" />
-						<div class=" mui-clearfix"></div>
-					</div>
-					<div class="mui-card-content pos-rel">
-						<div class="mui-card-content-inner">
-							<div class="innerbox">
-								<h5>CK小镇浪漫童话之旅</h5>
-								<p class="red">赠送ck小镇语音导览</p>
-							</div>
-							<div class="buy">
-								<div class="blue">￥18</div>
-								<a href="">购买</a>
-							</div>
-						</div>
-					</div>
-					<div class="mui-clearfix"></div>
-				</div>-->
-
 				<!--//mui-card-->
 			</div>
 
@@ -132,7 +90,7 @@
 					</div>
 					<div>
 						<div id="item1" class="mui-control-content mui-active">
-							<div class="mui-card order">
+							<div class="mui-card order" onclick="toOrderDetail(0)">
 								<div class="mui-table-view">
 									<div class=" mui-media">
 										<a href="order.html">
@@ -150,7 +108,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="mui-card order">
+							<div class="mui-card order" onclick="toOrderDetail(0)">
 								<div class="mui-table-view">
 									<div class=" mui-media">
 										<a href="order.html">
@@ -170,8 +128,8 @@
 							</div>
 
 						</div>
-						<div id="item2" class="mui-control-content">
-							<div class="mui-card">
+						<div id="item2" class="mui-control-content" >
+							<div class="mui-card" onclick="toDetail(1)">
 								<div class="mui-table-view">
 									<div class="mui-table-view-cell mui-media">
 										<a href="javascript:;">
@@ -186,7 +144,7 @@
 								</div>
 							</div>
 
-							<div class="mui-card ">
+							<div class="mui-card "  onclick="toDetail(1)">
 								<div class="mui-table-view">
 									<div class="mui-table-view-cell mui-media">
 										<a href="javascript:;">
@@ -211,6 +169,19 @@
 		</div>
 
 		<script type="text/javascript">
+			function toDetail(id){
+				myLocalStorage.setItem("townId",id);
+				wx.miniProgram.navigateTo({
+					url: '/pages/detail/detail'
+				})
+			}
+			function toOrderDetail(id){
+				myLocalStorage.setItem("townId",id);
+				wx.miniProgram.navigateTo({
+					url: '/pages/orderdetail/orderdetail'
+				})
+			}
+			
 			var vue1 = new Vue({
 				el: '#vue1',
 				data: {
@@ -224,11 +195,13 @@
 				methods: {
 					toBuy: function() {
 						wx.miniProgram.navigateTo({
-							url: '/pages/utils/chooseImg'
-						});
-						return false;
+							url: '/pages/orderconfirm/orderconfirm'
+						})
+					},
+					toDetail: function(id) {
+						myLocalStorage.setItem("townId",id);
 						wx.miniProgram.navigateTo({
-							url: '/pages/orderdetail/orderdetail'
+							url: '/pages/detail/detail'
 						})
 					}
 				}
@@ -246,6 +219,14 @@
 					this.$nextTick(function() {
 
 					})
+				},
+				methods:{
+					toDetail: function(id) {
+						myLocalStorage.setItem("townId",id);
+						wx.miniProgram.navigateTo({
+							url: '/pages/detail/detail'
+						})
+					}
 				}
 			});
 
@@ -267,7 +248,7 @@
 				});
 			}
 
-			var userInfo = {
+/*			var userInfo = {
 				"avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKTTLMBkrCduNtmqKMPyicZEhViaNF2naYdUeFwR3tGibv3KutErxwk9tqnwV6ibU6yS1ylWUBIR5YVaQ/132",
 				"city": "",
 				"country": "China",
@@ -275,7 +256,7 @@
 				"language": "zh_CN",
 				"nickName": "熊园昆",
 				"province": "Shanghai"
-			}
+			}*/
 
 			function initUserData() {
 				//用户个人信息
@@ -291,6 +272,13 @@
 				loadCityData();
 				initUserData();
 
+				/*mui("body").on("tap",".mui-card-header",function(){
+					myLocalStorage.setItem("town",$(this).attr("townid"));
+					wx.miniProgram.navigateTo({
+						url: '/pages/detail/detail'
+					})
+				})*/
+				
 				mui("body").on("tap", "#chooseCityBtn", function() {
 					wx.miniProgram.navigateTo({
 						url: '/pages/city/city'

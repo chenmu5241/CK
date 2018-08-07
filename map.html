@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>播放器</title>
+		<!--<title>CK小镇浪漫通话之旅</title>-->
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -15,6 +15,11 @@
 		<!--App自定义的css-->
 		<link rel="stylesheet" type="text/css" href="css/app.css" />
 		<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=CAZBZ-4TR6O-QKNWH-SNA42-KKXDV-GQBNR"></script>
+		<style>
+			.smnoprint{
+				display: none;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -24,8 +29,8 @@
 		</header>-->
 		<nav class="mui-bar mui-bar-tab no-border">
 			<div class="pos-fix">
-				<div class="line mui-text-center">请教<br/>行家</div>
-				<div class="line mui-text-center"><i class="fa fa-pencil"></i>点评</div>
+				<div class="line mui-text-center" id="consultBtn">请教<br/>行家</div>
+				<div class="line mui-text-center"  id="commentBtn"><i class="fa fa-pencil"></i>点评</div>
 			</div>
 			<div class="mui-slider">
 				<div class="mui-slider-group">
@@ -42,8 +47,8 @@
 								<p>02:23<span>左右滑动切换讲解点</span></p>
 							</div>
 							<div class="pos-abs location">
-								<a><i class=" fa fa-location-arrow"></i></a>
-								<a><i class=" fa fa-bullseye"></i></a>
+								<a id="navigationBtn"><i class=" fa fa-location-arrow" ></i></a>
+								<a id="navigationBtn1"><i class=" fa fa-bullseye"></i></a>
 							</div>
 						</div>
 						<div class="travelbox">
@@ -108,7 +113,7 @@
 
 		<div class="mui-content">
 
-			<div id="container" style="height:1000px;"></div>
+			<div id="container" ></div>
 
 			<!--<div class="pos-rel"> <img src="images/staticmap_zh-CN.png" class=" img-responsive" />
 
@@ -123,73 +128,147 @@
 		<script src="js/swiper.js"></script>
 		<script type="text/javascript">
 			$("#container").height($(window).height() - $("header").height() - $(".mui-bar-tab").height())
+			
+			//自定义Overlay代码开始 =================================================
+			var myOverlay=function(opts){
+				qq.maps.Overlay.call(this, opts);
+			};
+			//继承Overlay基类
+			myOverlay.prototype = new qq.maps.Overlay();
+			//实现构造方法
+			myOverlay.prototype.construct = function() {
+			    var div = this.dom = document.createElement("div");
+			    this.dom.style.cssText= 'position:absolute;margin-top:0px;margin-left:0px';
+			    this.dom.innerHTML = this.get('inithtml');
+			    //将dom添加到覆盖物层
+			    var panes = this.getPanes();
+			    //设置panes的层级，overlayMouseTarget可接收点击事件
+			    panes.overlayMouseTarget.appendChild(div);
+			    var self = this;
+			    this.dom.onclick = function() {
+			    	if($(self.dom.innerHTML).hasClass("lacation")){
+			    		var old = $(".lacationimg");
+			    		old.parent().html(balabala1);
+			    		self.dom.innerHTML = balabala2;
+			    	}
+			    }
+			};
+			
+			//自定义的方法，用于设置myOverlay的html
+			myOverlay.prototype.html=function(html){
+				this.dom.innerHTML=html;
+			}
+			//实现绘制覆盖物的方法（覆盖物的位置在此控制）
+			myOverlay.prototype.draw = function() {
+				//获取地理经纬度坐标
+				var position = this.get('position');
+				if (position) {
+					var pixel = this.getProjection().fromLatLngToDivPixel(position);
+					this.dom.style.left = pixel.getX()+ 'px';
+					this.dom.style.top = pixel.getY() + 'px';
+				}
+			};
+			//实现析构方法（类生命周期结束时会自动调用，用于释放资源等）
+			myOverlay.prototype.destroy = function() {
+				//移除dom
+				this.dom.parentNode.removeChild(this.dom);
+			};
+			//以上自定义Overlay代码结束 =================================================
+			
+			var balabala1='<div class="lacation" id="lacation" style="margin-top:-24px;margin-left:-12px">1</div>';
+			var balabala2='<div class="lacationimg" style="margin-top:-38px;margin-left:-18px;"><img src="images/raw_1531745438.png"  class=" img-responsive img-circle"></div>';
 			//初始化地图函数  自定义函数名init
-			function init() {
+			function initMap() {
+				var center = new qq.maps.LatLng(39.916527, 116.397128);
+				var center1 = new qq.maps.LatLng(39.916527, 116.357128);
 				//定义map变量 调用 qq.maps.Map() 构造函数   获取地图显示容器
 				var map = new qq.maps.Map(document.getElementById("container"), {
-					center: new qq.maps.LatLng(39.916527, 116.397128), // 地图的中心地理坐标。
-					zoom: 8 // 地图的中心地理坐标。
+					center: center, // 地图的中心地理坐标。
+					zoom: 12// 展现地图的放大比例
+				});
+				
+				//创自定义覆盖物 myOverlay，并设置初始的html
+				var label = new myOverlay({
+					map:map,
+					position:center,
+					inithtml:balabala1,
+					top:-24,
+					marginLeft:-12
+				});
+				
+				var label1 = new myOverlay({
+					map:map,
+					position:center1,
+					inithtml:balabala2,
+					top:-38,
+					marginLeft:-18
 				});
 			}
-
-			init();
-
-			$(".faplay").on("click", function() {
-				if($(this).hasClass('fa-play-circle')) {
-					$(this).removeClass('fa-play-circle');
-					$(this).addClass('fa-pause-circle-o');
-				} else {
-					$(this).addClass('fa-play-circle');
-					$(this).removeClass('fa-pause-circle-o');
-				}
-			});
-
-			var galleryTop = new Swiper('.gallery-top', {
-				spaceBetween: 10,
-				loop: true,
-				loopedSlides: 5, //looped slides should be the same
-
-			});
-			var galleryThumbs = new Swiper('.gallery-thumbs', {
-				spaceBetween: 10,
-				slidesPerView: 4,
-
-				touchRatio: 0.2,
-				loop: true,
-				loopedSlides: 5, //looped slides should be the same
-				slideToClickedSlide: true,
-			});
-			galleryTop.controller.control = galleryThumbs;
-			galleryThumbs.controller.control = galleryTop;
-
-			mui("body").on("swipeup", ".mui-slider", function(e) {
-				$('.travelbox').addClass('travelshow');
-				$('.pos-fix').addClass('pos-fixa');
-				var h = $('.mui-slider ').height();
-				$('.pos-fixa').css("bottom", (h + 15));
-			})
-			mui("body").on("swipedown", ".mui-slider", function(e) {
-				$('.travelbox').removeClass('travelshow');
-				var h = $('.mui-slider ').height();
-				$('.pos-fixa').css("bottom","74px");
-				$('.pos-fix').removeClass('pos-fixa');
-			})
 			
-			/*mui("body").on("drag", ".mui-slider", function(e) {
-				if($('.travelbox').hasClass("travelshow")){
-					$('.travelbox').removeClass('travelshow');
-					$('.pos-fix').removeClass('pos-fixa');
-					var h = $('.mui-slider ').height();
-					$('.pos-fixa').css("bottom", (h + 15));
-				}else{
+			mui.ready(function(){
+				initMap();//初始化地图
+				//上拉下拉事件
+				mui("body").on("swipeup", ".mui-slider", function(e) {
 					$('.travelbox').addClass('travelshow');
 					$('.pos-fix').addClass('pos-fixa');
 					var h = $('.mui-slider ').height();
 					$('.pos-fixa').css("bottom", (h + 15));
-				}
-			})*/
-			
-			
+				})
+				mui("body").on("swipedown", ".mui-slider", function(e) {
+					$('.travelbox').removeClass('travelshow');
+					var h = $('.mui-slider ').height();
+					$('.pos-fixa').css("bottom","74px");
+					$('.pos-fix').removeClass('pos-fixa');
+				})
+				
+				//图片轮播插件
+				$(".faplay").on("click", function() {
+					if($(this).hasClass('fa-play-circle')) {
+						$(this).removeClass('fa-play-circle');
+						$(this).addClass('fa-pause-circle-o');
+					} else {
+						$(this).addClass('fa-play-circle');
+						$(this).removeClass('fa-pause-circle-o');
+					}
+				});
+	
+				var galleryTop = new Swiper('.gallery-top', {
+					spaceBetween: 10,
+					loop: true,
+					loopedSlides: 5, //looped slides should be the same
+	
+				});
+				var galleryThumbs = new Swiper('.gallery-thumbs', {
+					spaceBetween: 10,
+					slidesPerView: 4,
+	
+					touchRatio: 0.2,
+					loop: true,
+					loopedSlides: 5, //looped slides should be the same
+					slideToClickedSlide: true,
+				});
+				galleryTop.controller.control = galleryThumbs;
+				galleryThumbs.controller.control = galleryTop;
+				
+				mui("body").on("tap","#consultBtn",function(){
+					alert("请教行家");
+				})
+				mui("body").on("tap","#commentBtn",function(){
+					alert("点评");
+				})
+				
+				//导航页面
+				mui("body").on("tap","#navigationBtn",function(){
+					mui.openWindow({
+						url:"navigation.html"
+					})
+					return
+					wx.miniProgram.navigateTo({
+						url: '/pages/navigation/navigation'
+					});
+				})
+				
+			})
 		</script>
 	</body>
 

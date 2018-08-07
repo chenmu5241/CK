@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>导航</title>
+		<!--<title>导航</title>-->
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -19,6 +19,12 @@
 		<script src="js/app.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+		<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=CAZBZ-4TR6O-QKNWH-SNA42-KKXDV-GQBNR"></script>
+		<style>
+			.smnoprint{
+				display: none;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -31,7 +37,6 @@
 			<div class="mui-slider navigation">
 				<div class="pos-fix">
 					<a><i class=" fa fa-bullseye"></i></a>
-
 				</div>
 				<div class="mui-slider-group ">
 					<div class="mui-slider-item ">
@@ -54,58 +59,52 @@
 			</div>
 		</nav>
 		<div class="mui-content">
-			<div class="pos-rel"> <img src="images/staticmap_zh-CN.png" class=" img-responsive" />
-				<i class=" fa fa-map-marker red"></i>
-			</div>
+			<div id="container" ></div>
+			<!--<div style='width: 500px; height: 180px' id="infoDiv"></div>-->
 		</div>
 		
 		<script type="text/javascript">
-			var vue1 = new Vue({
-				el: '#content',
-				data: {
-					data:{}
-				},
-				updated: function() {
-					this.$nextTick(function() {
+			$("#container").height($(window).height() - $("header").height() - $(".mui-bar-tab").height())
 
-					})
-				},
-				methods: {
-					chooseCity: function(event) {
-						wx.miniProgram.navigateBack();
-					}
-				}
-			});
 
-			function loadCountryData() {
-				$.ajax({
-					dataType: "json",
-					type: "get",
-					url: basePath + "/services/allcities",
-					data: {},
-					success: function(result) {
-						if(result.status == 0) {
-							vue1.countries = result.result.countries;
-						}
-						var cities = result.result.cities
-						for(var i = 0; i < cities.length; i++) {
-							var city = cities[i];
-							if(param.cityName.indexOf(city.name) != -1) {
-								alert(city.name)
-								vue1.pointCity = city;
-							}
-						}
-					},
-					error: function(result) {
-						mui.toast("请求遇到问题!")
-					}
-				});
-			}
-			
-			mui.init();
-			mui.ready(function() {
-
-			})
+        var center = new qq.maps.LatLng(39.916527, 116.397128);
+        var map = new qq.maps.Map(document.getElementById("container"), {
+            center: center
+          	//zoom: 15
+        });
+         //设置获取驾车线路方案的服务
+        var drivingService = new qq.maps.DrivingService({
+            map: map
+            //展现结果
+//          panel: document.getElementById('infoDiv')
+        });
+         //设置搜索地点信息、驾车方案等属性
+        function search() {
+        	var start = new qq.maps.LatLng(39.996017,116.386970);
+			var end = new qq.maps.LatLng(39.910344,116.394095);
+//          var start = "北京南站";
+//          var end = "天坛公园";
+            var policy = "LEAST_DISTANCE"//LEAST_TIME最少时间、LEAST_DISTANCE最短距离、AVOID_HIGHWAYS避开高速、REAL_TRAFFIC实时路况、PREDICT_TRAFFIC预测路况
+            //设置驾车方案
+            drivingService.setPolicy(qq.maps.DrivingPolicy[policy]);
+            //设置驾车的区域范围
+            drivingService.setLocation("北京");
+            //设置回调函数
+            drivingService.setComplete(function(result) {
+                if (result.type == qq.maps.ServiceResultType.MULTI_DESTINATION) {
+                    //alert("起终点不唯一");
+                    var d = result.detail;
+                    drivingService.search(d.start[0], d.end[0]);
+                }
+            });
+            //设置检索失败回调函数
+            drivingService.setError(function(data) {
+            	mui.toast(data);
+            });
+            //设置驾驶路线的起点和终点
+            drivingService.search(start, end);
+        }
+        window.onload = search;
 				
 		</script>
 	</body>

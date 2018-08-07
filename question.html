@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>用户提问</title>
+		<!--<title>用户提问</title>-->
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -27,7 +27,7 @@
 			<h1 class="mui-title">用户提问</h1>
 		</header>-->
 		<nav class="mui-bar mui-bar-tab no-border">
-			<a class="mui-tab-item mui-btn mui-btn-blue" href="#">
+			<a class="mui-tab-item mui-btn mui-btn-blue" onclick="toWritequestion()">
 				问行家
 			</a>
 
@@ -122,6 +122,13 @@
 		</div>
 		</div>
 		<script type="text/javascript">
+			function toWritequestion(){
+				wx.miniProgram.navigateTo({
+					url: '/pages/writecomment/writecomment'
+				})
+			}
+			
+			
 			var audio = document.getElementById("audio");
 			$(".app-voice-you").on("click", function() {
 				if($(".app-voice-state").hasClass("app-voice-play")) {

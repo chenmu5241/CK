@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>payment</title>
+		<!--<title>payment</title>-->
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -26,8 +26,8 @@
 			<h1 class="mui-title">支付结果</h1>
 		</header>-->
 		<nav class="mui-bar mui-bar-tab no-border">
-			<a class=" mui-col-xs-12 mui-btn mui-btn-blue" href="#">
-				立即购买
+			<a class=" mui-col-xs-12 mui-btn mui-btn-blue" id="goIndex()">
+				返回首页
 			</a>
 		</nav>
 		<div class="mui-content my">
@@ -91,6 +91,12 @@
 		</div>
 
 		<script type="text/javascript">
+			function goIndex(){
+				wx.miniProgram.navigateTo({
+					url: '/pages/index/index'
+				})
+			}
+			
 			var vue1 = new Vue({
 				el: '#content',
 				data: {
