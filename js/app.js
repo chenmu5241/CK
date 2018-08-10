@@ -1,5 +1,5 @@
 (function(window, mui) {
-	window.basePath = "https://www.imguider.com/microtest";
+	window.basePath = "https://www.imguider.com/microtest/";
 	window.baseUpload = "http://192.168.1.132:8181/fz-upload/"; //全局记录服务器端地址
 	/*	window.basePath = "http://192.168.2.100:8080/fz-app/";
 		window.baseUpload = "http://192.168.2.100:8181/fz-upload/"; */

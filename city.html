@@ -29,15 +29,15 @@
 		<div class="mui-content city" id="vue1">
 			<div class="mui-col-xs-12" v-if="pointCity != null">
 				<h5>GPS定位</h5>
-				<a class=" mui-col-xs-3 mui-pull-left mui-text-center" v-on:click="chooseCity(pointCity.name)">
+				<a class=" mui-col-xs-3 mui-pull-left mui-text-center" v-on:click="chooseCity(pointCity)">
 					<img :src="pointCity.pictures" class="img-responsive img-circle" />{{pointCity.name}}
 				</a>
 				<div class="mui-clearfix"></div>
 			</div>
 
 			<div class="mui-col-xs-12" v-for="country in countries">
-				<h5>阿根廷</h5>
-				<a class="mui-col-xs-3 mui-pull-left mui-text-center" v-on:click="chooseCity(city.name)" v-for="city in country.cities">
+				<h5>{{country.name}}</h5>
+				<a class="mui-col-xs-3 mui-pull-left mui-text-center" v-on:click="chooseCity(city)" v-for="city in country.cities">
 					<img :src="city.pictures" class=" img-responsive img-circle" />{{city.name}}
 				</a>
 				<div class="mui-clearfix"></div>
@@ -45,11 +45,6 @@
 		</div>
 		<script src="js/mui.min.js"></script>
 		<script type="text/javascript">
-//			wx.setStorage("haha","haha");
-//			var pages = wx.getCurrentPages();
-//			var currPage = wx.pages[pages.length - 1];   //当前页面
-//			var prevPage = wx.pages[pages.length - 2];  //上一个页面
-			
 			
 			var param = getRequest(); //得到url参数
 			var vue1 = new Vue({
@@ -60,16 +55,15 @@
 				},
 				updated: function() {
 					this.$nextTick(function() {
-
 					})
 				},
 				methods: {
-					chooseCity: function(cityName) {
-						myLocalStorage.setItem("city",cityName);
-						wx.miniProgram.postMessage({ data: {city: cityName} })
+					chooseCity: function(city) {
+						myLocalStorage.setItem("city",city);
+						//wx.miniProgram.postMessage({ data: {city: cityName} })
 						wx.miniProgram.navigateTo(
 							{
-								url:'/pages/index/index?city&cityName'
+								url:'/pages/index/index'
 							}
 						);
 						//强制刷新首页
@@ -107,7 +101,7 @@
 				});
 			}
 			
-			mui.ready(function() {
+			$(function() {
 				loadCountryData();
 			})
 		</script>

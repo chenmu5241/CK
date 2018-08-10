@@ -11,12 +11,15 @@
 		<link rel="stylesheet" href="css/mui.min.css">
 		<link rel="stylesheet" href="css/style.css">
 		<link rel="stylesheet" href="css/font-awesome.css">
+		<link rel="stylesheet" type="text/css" href="css/pulltorefresh.css" />
 		<!--App自定义的css-->
 		<link rel="stylesheet" type="text/css" href="css/app.css" />
 		<script src="js/mui.min.js"></script>
 		<script src="js/jquery.min.js"></script>
 		<script src="js/app.js"></script>
 		<script src="js/vue.min.js"></script>
+		<script src="js/mui.pullToRefresh.js"></script>
+		<script src="js/mui.pullToRefresh.material.js"></script>
 		<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
 	</head>
 
@@ -26,171 +29,144 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">用户提问</h1>
 		</header>-->
-		<nav class="mui-bar mui-bar-tab no-border">
-			<a class="mui-tab-item mui-btn mui-btn-blue" onclick="toWritequestion()">
-				问行家
-			</a>
-
-		</nav>
-		<div class="mui-content detail comcontainer que ">
-			<div class="mui-table-view no-margin">
-				<div class="mui-media ">
-					<h5>水上威尼斯，盘点意大利那些精致小镇</h5>
-					<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-						<div class="pos-abs">V</div>
-					</div>
-					<div class="mui-media-body">
-						<h5>方静静</h5>
-					</div>
-					<div class="mui-clearfix"></div>
-					<p>401人评论</p>
-				</div>
-			</div>
-
-			<div class="comment mui-table-view">
-
-				<div class=" mui-col-xs-12">
-					<div class="commentbox">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
-						</div>
-						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
-						</div>
-						<p>CK小镇吃猪手哪家强</p>
-						<div class="answer">
-							答:
-							<div class="answerbox">
-								<div class="app-voice-you">
-									<div class="app-voice-state app-voice-pause"></div>
-									<div class="app-voice-time">
-										41s</div>
+		<div id="content" v-cloak>
+			<nav class="mui-bar mui-bar-tab no-border">
+				<a class="mui-tab-item mui-btn mui-btn-blue" v-on:click="toWritequestion(data)">
+					问行家
+				</a>
+			</nav>
+			<div class="mui-content detail comcontainer que ">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll" id="refresh_container1">
+						<div class="mui-table-view no-margin" v-if="data.lineName != null">
+							<div class="mui-media ">
+								<h5>{{data.lineName}}</h5>
+								<div class="mui-media-object mui-pull-left pos-rel">
+									<img :src="data.guideFace" class=" img-circle img-responsive">
+									<div class="pos-abs">V</div>
 								</div>
-								<audio src="souds/sound.mp3" hidden='true' controls id="audio">
-								</audio>
-							</div>
-							<span class=" mui-pull-right">16人收听</span>
-						</div>
-					</div>
-
-					<div class="commentbox">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
-						</div>
-						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
-						</div>
-						<p>CK小镇吃猪手哪家强</p>
-						<div class="answer">
-							答:
-							<div class="answerbox">
-								<div class="app-voice-you">
-									<div class="app-voice-state app-voice-pause"></div>
-									<div class="app-voice-time">
-										41s</div>
+								<div class="mui-media-body">
+									<h5>{{data.guideName}}</h5>
 								</div>
-								<audio src="souds/sound.mp3" hidden='true' controls id="audio">
-								</audio>
+								<div class="mui-clearfix"></div>
+								<p>{{data.askTimes}}人提问</p>
 							</div>
-							<span class=" mui-pull-right">16人收听</span>
 						</div>
-					</div>
-					<div class="commentbox">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
-						</div>
-						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
-						</div>
-						<p>CK小镇吃猪手哪家强</p>
-						<div class="answer">
-							答:
-							<div class="answerbox">
-								<div class="app-voice-you">
-									<div class="app-voice-state app-voice-pause"></div>
-									<div class="app-voice-time">
-										41s</div>
+						<div class="comment mui-table-view">
+							<div class=" mui-col-xs-12">
+								<div class="commentbox" v-for="item in list">
+									<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
+									</div>
+									<div class="mui-media-body">
+										<h5>{{item.touristName}}<span>{{item.createtime}}</span></h5>
+									</div>
+									<p>{{item.question}}</p>
+									<div class="answer">
+										答:
+										<div class="answerbox" v-on:click="play">
+											<div class="app-voice-you">
+												<div class="app-voice-state app-voice-pause"></div>
+												<div class="app-voice-time">
+													5s</div>
+											</div>
+											<audio src="http://cncdn.imguider.com/upload/records/20170717/3588a165-10c9-41cc-b0b0-4b0c328758ef.mp3" hidden='true' controls>
+											</audio>
+										</div>
+										<span class=" mui-pull-right">人收听</span>
+									</div>
 								</div>
-								<audio src="souds/sound.mp3" hidden='true' controls id="audio">
-								</audio>
 							</div>
-							<span class=" mui-pull-right">16人收听</span>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 		</div>
 		<script type="text/javascript">
-			function toWritequestion(){
-				wx.miniProgram.navigateTo({
-					url: '/pages/writecomment/writecomment'
-				})
-			}
-			
-			
-			var audio = document.getElementById("audio");
-			$(".app-voice-you").on("click", function() {
-				if($(".app-voice-state").hasClass("app-voice-play")) {
-					$(".app-voice-state").addClass("app-voice-pause");
-					$(".app-voice-state").removeClass("app-voice-play")
-					audio.pause();
-
-				} else {
-					$(".app-voice-state").removeClass("app-voice-pause");
-					$(".app-voice-state").addClass("app-voice-play")
-					audio.play();
-				}
-			})
-			
-			
 			var vue1 = new Vue({
 				el: '#content',
 				data: {
-					data:{}
+					data: {},
+					list: []
 				},
 				updated: function() {
-					this.$nextTick(function() {
-
-					})
+					this.$nextTick(function() {})
 				},
 				methods: {
-					chooseCity: function(event) {
-						wx.miniProgram.navigateBack();
+					play: function(e) {
+						console.log($(e.target).children("audio"));
+						var audio = $(e.currentTarget).find("audio")[0]; //转换成dom
+						if($(e.currentTarget).find(".app-voice-state").hasClass("app-voice-play")) {
+							$(e.currentTarget).find(".app-voice-state").addClass("app-voice-pause");
+							$(e.currentTarget).find(".app-voice-state").removeClass("app-voice-play")
+							audio.pause();
+						} else {
+							//停止其他的audio
+							$("audio").not(audio).each(function() {
+								this.pause();
+							})
+							$(".app-voice-state").removeClass("app-voice-play");
+							$(".app-voice-state").addClass("app-voice-pause");
+							$(e.currentTarget).find(".app-voice-state").removeClass("app-voice-pause");
+							$(e.currentTarget).find(".app-voice-state").addClass("app-voice-play")
+							audio.play();
+						}
+					},
+					toWritequestion:function(line) {
+						myLocalStorage.setItem("line", line);
+						wx.miniProgram.navigateTo({
+							url: '/pages/writequestion/writequestion'
+						})
 					}
 				}
 			});
 
-			function loadCountryData() {
-				$.ajax({
-					dataType: "json",
-					type: "get",
-					url: basePath + "/services/allcities",
-					data: {},
-					success: function(result) {
-						if(result.status == 0) {
-							vue1.countries = result.result.countries;
+			//加载数据参数
+			var pageVo = {
+				pageNo: 0,
+				pageSize: 10,
+				"lineid": "22a1be26-c25d-49fe-96f7-77e24a797abd",
+				//				lineid: myLocalStorage.getItem("lineid")
+			}
+
+			$(function() {
+				//刷新组件对象
+				var pullToRefresh1 = mui('#refresh_container1').pullToRefresh({
+					up: {
+						auto: true, //默认执行一次上拉加载
+						callback: function() {
+							var _self = this;
+							setTimeout(function() {
+								$.ajax({
+									dataType: "json",
+									type: "post",
+									headers: {
+										'Content-Type': 'application/json',
+										'token': myLocalStorage.getItem("token")
+									},
+									url: basePath + "services/qa/page/lineqa",
+									data: JSON.stringify(pageVo),
+									success: function(res) {
+										if(res.status == 0) {
+											vue1.data = res.result;
+											vue1.list = vue1.list.concat(res.result.content); //小镇list数据
+											_self.endPullUpToRefresh(res.result.content.length == 0);
+											if(res.result.content.length > 0) {
+												pageVo.pageNo += 1;
+											}
+										} else {
+											mui.toast(res.errmsg)
+										}
+									},
+									error: function(result) {
+										mui.toast("请求遇到问题!")
+									}
+								});
+							}, 500);
 						}
-						var cities = result.result.cities
-						for(var i = 0; i < cities.length; i++) {
-							var city = cities[i];
-							if(param.cityName.indexOf(city.name) != -1) {
-								alert(city.name)
-								vue1.pointCity = city;
-							}
-						}
-					},
-					error: function(result) {
-						mui.toast("请求遇到问题!")
 					}
 				});
-			}
-			
-			mui.init();
-			mui.ready(function() {
 
 			})
-				
 		</script>
 	</body>
 

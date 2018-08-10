@@ -22,7 +22,7 @@
 
 	<body>
 
-		<!--<header class="mui-bar mui-bar-nav">
+<!--		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">CK小镇浪漫童话之旅</h1>
 		</header>-->
@@ -30,74 +30,54 @@
 			<a class=" mui-btn mui-btn-blue mui-col-xs-12" onclick="toRadio()">
 				<i class="fa fa-play-circle-o"></i>试听
 			</a>
-
 		</nav>
-		<div class="mui-content detail" id="content">
-			<img src="images/raw_1531743738.png" class=" img-responsive" />
+		<div class="mui-content detail" id="content" v-cloak>
+			<img :src="data.audiopic" class=" img-responsive" />
 			<div class="mui-table-view">
 				<div class="mui-media">
-					<h4>水上威尼斯，盘点意大利那些精致小镇</h4>
-					<div class="mui-inline"><span>国语</span><span>亲切</span></div>
-					<div class="icons mui-inline">
-						<i data-index="1" class="fa" :class="data.score>=1?'fa-star':'fa-star-o'"></i>
-						<i data-index="2" class="fa" :class="data.score>=2?'fa-star':'fa-star-o'"></i>
-						<i data-index="3" class="fa" :class="data.score>=3?'fa-star':'fa-star-o'"></i>
-						<i data-index="4" class="fa" :class="data.score>=4?'fa-star':'fa-star-o'"></i>
-						<i data-index="5" class="fa" :class="data.score>=5?'fa-star':'fa-star-o'"></i>
+					<h4>{{data.linename}}</h4>
+					<div class="mui-inline" v-if="data.labels != null">
+						<span v-for="item in data.labels.split(',')">{{item}}</span>
 					</div>
-					<p>欧洲工作生活多年，深度自助旅行过欧美亚30个国家260多个城市的资深玩家，胆大心细爱收集，最大的</p>
+					<div class="icons mui-inline">
+						<i data-index="1" class="fa" :class="data.score>=10?'fa-star':'fa-star-o'"></i>
+						<i data-index="2" class="fa" :class="data.score>=20?'fa-star':'fa-star-o'"></i>
+						<i data-index="3" class="fa" :class="data.score>=30?'fa-star':'fa-star-o'"></i>
+						<i data-index="4" class="fa" :class="data.score>=40?'fa-star':'fa-star-o'"></i>
+						<i data-index="5" class="fa" :class="data.score>=50?'fa-star':'fa-star-o'"></i>
+					</div>
+					<p>{{data.cityName}}</p>
 					<div class=" mui-col-sm-12">
-						<span><i class=" fa fa-map-marker"></i>12</span>
-						<span><i class="fa fa-headphones"></i>73</span>
-						<span><i class="fa fa-clock-o"></i>60min</span>
-
+						<span><i class=" fa fa-map-marker"></i>{{data.preonline}}</span>
+						<span><i class="fa fa-clock-o"></i>{{data.timelabel}}min</span>
+						<span><i class="fa fa-headphones"></i>{{data.visits}}</span>
 					</div>
 				</div>
 
-				<div class="mui-media">
+				<div class="mui-media" v-if="data.guide != null">
 					<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
 						<div class="pos-abs">V</div>
 					</div>
 					<div class="mui-media-body">
-						<h5>方静静</h5>
-
-						<p class="red">欧洲旅游协会会员</p>
+						<h5>{{data.guide.realname}}</h5>
+						<p class="red">{{data.guide.certificate}}</p>
 					</div>
 					<div class="mui-clearfix"></div>
-
-					<p>欧洲工作生活多年，深度自助旅行过欧美亚30个国家260多个城市的资深玩家，胆大心细爱收集，最大的愿望就是足迹遍布全世界</p>
-
+					<p>{{data.guide.introduction}}</p>
 				</div>
 
-				<div class="mui-media">
-					<h4>讲解点<span>23个讲解点</span></h4>
-					<div class="mui-col-xs-12">
-						<a class=" mui-col-xs-4 mui-pull-left">
-							<img src="images/raw_1531745438.png" class=" img-rounded img-responsive" />讲解线路名称
-						</a>
-						<a class=" mui-col-xs-4 mui-pull-left">
-							<img src="images/raw_1531745438.png" class=" img-rounded img-responsive" />讲解线路名称
-						</a>
-						<a class=" mui-col-xs-4 mui-pull-left">
-							<img src="images/raw_1531745438.png" class=" img-rounded img-responsive" />讲解线路名称
-						</a>
-					</div>
-					<div class="mui-clearfix"></div>
-					<div class="mui-col-xs-12">
-						<a class=" mui-col-xs-4 mui-pull-left">
-							<img src="images/raw_1531745438.png" class=" img-rounded img-responsive" />讲解线路名称
-						</a>
-						<a class=" mui-col-xs-4 mui-pull-left">
-							<img src="images/raw_1531745438.png" class=" img-rounded img-responsive" />讲解线路名称
-						</a>
-						<a class=" mui-col-xs-4 mui-pull-left">
-							<img src="images/raw_1531745438.png" class=" img-rounded img-responsive" />讲解线路名称
-						</a>
-
-					</div>
-					<div class="mui-clearfix"></div>
+				<div class="mui-media" v-if="data.records != null">
+					<h4>讲解点<span>{{data.records.length}}个讲解点</span></h4>
+					<template v-for="records in doubleRecords">
+						<div class="mui-col-xs-12">
+							<a class=" mui-col-xs-4 mui-pull-left" v-for="item in records">
+								<img :src="item.spotpictures" class=" img-rounded img-responsive" />{{item.spotname}}
+							</a>
+						</div>
+						<div class="mui-clearfix"></div>
+					</template>
 					<div class="mui-col-xs-12 map">
-						<img src="images/map.png" class=" img-responsive" />
+						<img :src="data.thumbs" class=" img-responsive" />
 					</div>
 				</div>
 
@@ -106,175 +86,156 @@
 			<div class="comment mui-table-view">
 				<h4>用户点评</h4>
 				<div class="icons mui-inline">
-					4.8
-					<i data-index="1" class="fa fa-star"></i>
-					<i data-index="2" class="fa fa-star"></i>
-					<i data-index="3" class="fa fa-star"></i>
-					<i data-index="4" class="fa fa-star"></i>
-					<i data-index="5" class="fa fa-star-o"></i>
+					{{data.score/10}}
+					<i data-index="1" class="fa" :class="data.score>=10?'fa-star':'fa-star-o'"></i>
+					<i data-index="2" class="fa" :class="data.score>=20?'fa-star':'fa-star-o'"></i>
+					<i data-index="3" class="fa" :class="data.score>=30?'fa-star':'fa-star-o'"></i>
+					<i data-index="4" class="fa" :class="data.score>=40?'fa-star':'fa-star-o'"></i>
+					<i data-index="5" class="fa" :class="data.score>=50?'fa-star':'fa-star-o'"></i>
 				</div>
-				<p>点评</p>
+				<p>{{data.commentnum}}点评</p>
 				<div class=" mui-col-xs-12">
-					<div class="commentbox">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
+					<div class="commentbox" v-for="item in data.comments">
+						<div class="mui-media-object mui-pull-left pos-rel">
+							<img :src="item.headimg" class=" img-circle img-responsive">
 						</div>
 						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
+							<h5>{{item.realname}}<span>{{item.time}}</span></h5>
 							<div class="icons mui-inline">
-								<i data-index="1" class="fa fa-star"></i>
-								<i data-index="2" class="fa fa-star"></i>
-								<i data-index="3" class="fa fa-star"></i>
-								<i data-index="4" class="fa fa-star"></i>
-								<i data-index="5" class="fa fa-star-o"></i>
+								<i data-index="1" class="fa" :class="item.score>=10?'fa-star':'fa-star-o'"></i>
+								<i data-index="2" class="fa" :class="item.score>=20?'fa-star':'fa-star-o'"></i>
+								<i data-index="3" class="fa" :class="item.score>=30?'fa-star':'fa-star-o'"></i>
+								<i data-index="4" class="fa" :class="item.score>=40?'fa-star':'fa-star-o'"></i>
+								<i data-index="5" class="fa" :class="item.score>=50?'fa-star':'fa-star-o'"></i>
 							</div>
 						</div>
-						<p>讲的太好了</p>
-					</div>
-					<div class="commentbox">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
-						</div>
-						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
-							<div class="icons mui-inline">
-								<i data-index="1" class="fa fa-star"></i>
-								<i data-index="2" class="fa fa-star"></i>
-								<i data-index="3" class="fa fa-star"></i>
-								<i data-index="4" class="fa fa-star"></i>
-								<i data-index="5" class="fa fa-star-o"></i>
-							</div>
-						</div>
-						<p>讲的太好了</p>
+						<p>{{item.comment}}</p>
 					</div>
 				</div>
-				<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 " onclick="toComment()">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 " v-on:click="toComment(data.lineid)">
 					查看全部用户点评
 				</button>
 			</div>
 			<div class="comment question mui-table-view">
 				<h4>用户提问</h4>
-
 				<p>点评</p>
 				<div class=" mui-col-xs-12">
-					<div class="commentbox">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
+					<div class="commentbox" v-for="item in data.questions">
+						<div class="mui-media-object mui-pull-left pos-rel"><img :src="item.touristFace" class=" img-circle img-responsive">
 						</div>
 						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
+							<h5>{{item.touristName}}<span>{{item.createtime}}</span></h5>
 						</div>
-						<p>CK小镇吃猪手哪家强</p>
+						<p>{{item.question}}</p>
 						<div class="answer">
 							答:
-							<div class="answerbox">
+							<div class="answerbox" v-on:click="play">
 								<div class="app-voice-you">
 									<div class="app-voice-state app-voice-pause"></div>
 									<div class="app-voice-time">
-										41s</div>
+										5s</div>
 								</div>
-								<audio src="souds/sound.mp3" hidden='true' controls id="audio">
+								<audio src="http://cncdn.imguider.com/upload/records/20170717/3588a165-10c9-41cc-b0b0-4b0c328758ef.mp3" hidden='true' controls >
 								</audio>
 							</div>
-							<span class=" mui-pull-right">16人收听</span>
+							<span class=" mui-pull-right">人收听</span>
 						</div>
 					</div>
-					<div class="commentbox">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-
-						</div>
-						<div class="mui-media-body">
-							<h5>方静静<span>2017-10-06</span></h5>
-						</div>
-						<p>CK小镇吃猪手哪家强</p>
-						<div class="answer">
-							答:
-							<div class="answerbox">
-								<div class="app-voice-you">
-									<div class="app-voice-state app-voice-pause"></div>
-									<div class="app-voice-time">
-										41s</div>
-								</div>
-								<audio src="souds/sound.mp3" hidden='true' controls id="audio">
-								</audio>
-							</div>
-							<span class=" mui-pull-right">16人收听</span>
-						</div>
-					</div>
-					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 " onclick="toQuestion()">
+					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 " v-on:click="toQuestion(data.lineid)">
 					查看全部用户提问
 				</button>
 				</div>
-
 			</div>
 		</div>
 		<script type="text/javascript">
-			function toRadio(){
+			//			alert(myLocalStorage.getItem("lineid"));
+
+			function toRadio() {
 				wx.miniProgram.navigateTo({
 					url: '/pages/map/map'
 				})
 			}
-			function toComment(){
-				wx.miniProgram.navigateTo({
-					url: '/pages/comment/comment'
-				})
-			}
-			function toQuestion(){
-				wx.miniProgram.navigateTo({
-					url: '/pages/question/question'
-				})
-			}
-			
-			var audio = document.getElementById("audio");
-			$(".app-voice-you").on("click", function() {
-				if($(".app-voice-state").hasClass("app-voice-play")) {
-					$(".app-voice-state").addClass("app-voice-pause");
-					$(".app-voice-state").removeClass("app-voice-play")
-					audio.pause();
 
-				} else {
-					$(".app-voice-state").removeClass("app-voice-pause");
-					$(".app-voice-state").addClass("app-voice-play")
-					audio.play();
-				}
-			})
-			
 			var vue1 = new Vue({
 				el: '#content',
 				data: {
-					data:{
-						score:1
-					}
+					data: {},
+					doubleRecords:[]
 				},
 				updated: function() {
 					this.$nextTick(function() {
-
 					})
 				},
 				methods: {
-					chooseCity: function(event) {
-						wx.miniProgram.navigateBack();
+					toComment:function(lineid) {
+						console.log("跳转到所有comment");
+						myLocalStorage.setItem("lineid",lineid);
+						wx.miniProgram.navigateTo({
+							url: '/pages/comment/comment'
+						})
+					},
+					toQuestion:function(lineid) {
+						console.log("跳转到所有question");
+						myLocalStorage.setItem("lineid",lineid);
+						wx.miniProgram.navigateTo({
+							url: '/pages/question/question'
+						})
+					},
+					play:function(e){
+//						console.log($(e.target).children("audio"));
+						var audio = $(e.currentTarget).find("audio")[0];//转换成dom
+						if($(e.currentTarget).find(".app-voice-state").hasClass("app-voice-play")) {
+							$(e.currentTarget).find(".app-voice-state").addClass("app-voice-pause");
+							$(e.currentTarget).find(".app-voice-state").removeClass("app-voice-play")
+							audio.pause();
+						} else {
+							//停止其他的audio
+							$("audio").not(audio).each(function(){
+								this.pause();
+							})
+							$(".app-voice-state").removeClass("app-voice-play");
+							$(".app-voice-state").addClass("app-voice-pause");
+							$(e.currentTarget).find(".app-voice-state").removeClass("app-voice-pause");
+							$(e.currentTarget).find(".app-voice-state").addClass("app-voice-play")
+							audio.play();
+						}
+					}
+				},
+				watch:{
+					data:function(){//组装二维数组，由于页面4，4，4的排列方式，需要用二维数组解析
+						var self = this;
+						var records = self.data.records;
+						var num = 3;//每个子数组里的元素个数;
+						var Arr = new Array(Math.ceil(records.length/num));
+						for(var i = 0; i<Arr.length;i++){
+					        Arr[i] = new Array();
+					        for(var j = 0; j<num; j++){
+					        	Arr[i][j] = '';
+					        }
+				        }
+						for(var i = 0; i<records.length;i++){
+				        	Arr[parseInt(i/num)][i%num] = records[i]; 
+				        } 
+						self.doubleRecords = Arr;
 					}
 				}
 			});
 
-			function loadCountryData() {
+			function loadLineDetail() {
 				$.ajax({
 					dataType: "json",
 					type: "get",
-					url: basePath + "/services/allcities",
+					headers: {
+						'Content-Type': 'application/json',
+						'token': myLocalStorage.getItem("token")
+					},
+					url: basePath + "services/lineinfo/" + myLocalStorage.getItem("lineid"),
 					data: {},
-					success: function(result) {
-						if(result.status == 0) {
-							vue1.countries = result.result.countries;
-						}
-						var cities = result.result.cities
-						for(var i = 0; i < cities.length; i++) {
-							var city = cities[i];
-							if(param.cityName.indexOf(city.name) != -1) {
-								alert(city.name)
-								vue1.pointCity = city;
-							}
+					success: function(res) {
+						if(res.status == 0) {
+							vue1.data = res.result;
+						} else {
+							mui.toast(res.errmsg)
 						}
 					},
 					error: function(result) {
@@ -282,10 +243,9 @@
 					}
 				});
 			}
-			
-			mui.init();
-			mui.ready(function() {
 
+			$(function() {
+				loadLineDetail();
 			})
 		</script>
 	</body>

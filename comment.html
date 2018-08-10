@@ -12,17 +12,20 @@
 		<link rel="stylesheet" href="css/mui.min.css">
 		<link rel="stylesheet" href="css/style.css">
 		<link rel="stylesheet" href="css/font-awesome.css">
+		<link rel="stylesheet" type="text/css" href="css/pulltorefresh.css" />
 		<!--App自定义的css-->
 		<link rel="stylesheet" type="text/css" href="css/app.css" />
+
 		<script src="js/mui.min.js"></script>
 		<script src="js/jquery.min.js"></script>
 		<script src="js/app.js"></script>
 		<script src="js/vue.min.js"></script>
+		<script src="js/mui.pullToRefresh.js"></script>
+		<script src="js/mui.pullToRefresh.material.js"></script>
 		<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
 	</head>
 
 	<body style="background:#f8f8f8">
-
 		<!--<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">用户点评</h1>
@@ -32,59 +35,58 @@
 				写点评
 			</a>
 		</nav>
-		<div class="mui-content detail comcontainer" id="content" v-cloak>
-			<div class="mui-media">
-				<h5>水上威尼斯，盘点意大利那些精致小镇</h5>
-				<div class="icons mui-inline">
-					{{gScore}}
-					<i data-index="1" class="fa" :class="gScore>=1?'fa-star':'fa-star-o'"></i>
-					<i data-index="2" class="fa" :class="gScore>=2?'fa-star':'fa-star-o'"></i>
-					<i data-index="3" class="fa" :class="gScore>=3?'fa-star':'fa-star-o'"></i>
-					<i data-index="4" class="fa" :class="gScore>=4?'fa-star':'fa-star-o'"></i>
-					<i data-index="5" class="fa" :class="gScore>=5?'fa-star':'fa-star-o'"></i>
-				</div>
-				<p>401人评论</p>
-			</div>
-
-			<div class="comment mui-table-view">
-
-				<div class=" mui-col-xs-12">
-					<div class="commentbox" v-for="item in comments">
-						<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
+		<div class="mui-content detail comcontainer" id="content" v-cloak >
+			<div class="mui-scroll-wrapper" >
+				<div class="mui-scroll" id="refresh_container1">
+					<div class="mui-media" v-if="data.linename != null">
+						<h5>{{data.linename}}</h5>
+						<div class="icons mui-inline">
+							{{data.score/10}}
+							<i data-index="1" class="fa" :class="data.score>=10?'fa-star':'fa-star-o'"></i>
+							<i data-index="2" class="fa" :class="data.score>=20?'fa-star':'fa-star-o'"></i>
+							<i data-index="3" class="fa" :class="data.score>=30?'fa-star':'fa-star-o'"></i>
+							<i data-index="4" class="fa" :class="data.score>=40?'fa-star':'fa-star-o'"></i>
+							<i data-index="5" class="fa" :class="data.score>=50?'fa-star':'fa-star-o'"></i>
 						</div>
-						<div class="mui-media-body">
-							<h5>{{item.userName}}<span>{{item.time}}</span></h5>
-							<div class="icons mui-inline">
-								<i data-index="1" class="fa" :class="item.score>=1?'fa-star':'fa-star-o'"></i>
-								<i data-index="2" class="fa" :class="item.score>=2?'fa-star':'fa-star-o'"></i>
-								<i data-index="3" class="fa" :class="item.score>=3?'fa-star':'fa-star-o'"></i>
-								<i data-index="4" class="fa" :class="item.score>=4?'fa-star':'fa-star-o'"></i>
-								<i data-index="5" class="fa" :class="item.score>=5?'fa-star':'fa-star-o'"></i>
+						<p>{{data.zanTimes}}人评论</p>
+					</div>
+
+					<div class="comment mui-table-view">
+
+						<div class=" mui-col-xs-12">
+							<div class="commentbox" v-for="item in list">
+								<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
+								</div>
+								<div class="mui-media-body">
+									<h5>{{item.realname}}<span>{{item.time}}</span></h5>
+									<div class="icons mui-inline">
+										<i data-index="1" class="fa" :class="item.score>=1?'fa-star':'fa-star-o'"></i>
+										<i data-index="2" class="fa" :class="item.score>=2?'fa-star':'fa-star-o'"></i>
+										<i data-index="3" class="fa" :class="item.score>=3?'fa-star':'fa-star-o'"></i>
+										<i data-index="4" class="fa" :class="item.score>=4?'fa-star':'fa-star-o'"></i>
+										<i data-index="5" class="fa" :class="item.score>=5?'fa-star':'fa-star-o'"></i>
+									</div>
+								</div>
+								<p>{{item.comment}}</p>
+								<div class=" mui-pull-right" v-on:click="dianzan(item.touristid)"><i class=" fa fa-thumbs-up"></i>12</div>
 							</div>
 						</div>
-						<p>{{item.content}}</p>
-						<div class=" mui-pull-right"><i class=" fa fa-thumbs-up"></i>12</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<script type="text/javascript">
-			function toWriteComment(){
+			function toWriteComment() {
+				console.log("写评论");
 				wx.miniProgram.navigateTo({
 					url: '/pages/writecomment/writecomment'
 				})
 			}
-			
 			var vue1 = new Vue({
 				el: '#content',
 				data: {
-					comments: [{
-						userName: "方静静",
-						time: "2018-08-03",
-						content: "这是评价内容",
-						score:4
-					}],
-					gScore:3
+					data: {},
+					list: []
 				},
 				updated: function() {
 					this.$nextTick(function() {
@@ -92,39 +94,55 @@
 					})
 				},
 				methods: {
-					chooseCity: function(event) {
-						wx.miniProgram.navigateBack();
+					dianzan: function(touristid) {
+						alert(touristid);
 					}
 				}
 			});
 
-			function loadCountryData() {
-				$.ajax({
-					dataType: "json",
-					type: "get",
-					url: basePath + "/services/allcities",
-					data: {},
-					success: function(result) {
-						if(result.status == 0) {
-							vue1.countries = result.result.countries;
+			//加载数据参数
+			var pageVo = {
+				pageNo: 0,
+				pageSize: 10
+			}
+
+			$(function() {
+				//刷新组件对象
+				var pullToRefresh1 = mui('#refresh_container1').pullToRefresh({
+					up: {
+						auto: true, //默认执行一次上拉加载
+						callback: function() {
+							var _self = this;
+							setTimeout(function() {
+								$.ajax({
+									dataType: "json",
+									type: "post",
+									headers: {
+										'Content-Type': 'application/json',
+										'token': myLocalStorage.getItem("token")
+									},
+									url: basePath + "services/line/" + myLocalStorage.getItem("lineid") + "/comments",
+									data: JSON.stringify(pageVo),
+									success: function(res) {
+										if(res.status == 0) {
+											vue1.data = res.result;
+											vue1.list = vue1.list.concat(res.result.content); //小镇list数据
+											_self.endPullUpToRefresh(res.result.content.length == 0);
+											if(res.result.content.length > 0) {
+												pageVo.pageNo += 1;
+											}
+										} else {
+											mui.toast(res.errmsg)
+										}
+									},
+									error: function(result) {
+										mui.toast("请求遇到问题!")
+									}
+								});
+							}, 500);
 						}
-						var cities = result.result.cities
-						for(var i = 0; i < cities.length; i++) {
-							var city = cities[i];
-							if(param.cityName.indexOf(city.name) != -1) {
-								alert(city.name)
-								vue1.pointCity = city;
-							}
-						}
-					},
-					error: function(result) {
-						mui.toast("请求遇到问题!")
 					}
 				});
-			}
-			
-			mui.init();
-			mui.ready(function() {
 
 			})
 		</script>
