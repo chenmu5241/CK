@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<!--<title>订单确认</title>-->
+		<title>订单确认</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -25,112 +25,115 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">订单确认</h1>
 		</header>-->
-		<nav class="mui-bar mui-bar-tab no-border">
-			<a class=" mui-col-xs-12 mui-btn mui-btn-blue"  onclick="toPayment()">
-				立即支付
-			</a>
-		</nav>
-		<div class="mui-content my number">
-			<div class="mui-card">
-				<div class="mui-table-view">
-					<div class="mui-table-view-cell mui-media">
-						<a href="javascript:;">
-							<img class="mui-media-object mui-pull-left" src="images/raw_1531743738.png">
-							<div class="mui-media-body">
-								<h5>CK艺术城堡之旅CK艺术城堡之旅CK艺术城堡之旅CK艺堡之旅CK艺术城堡之术城堡之</h5>
-								<span>国语</span><span>亲切</span>
-								<p>国家地区 城市名称</p>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
-
-			<div class="mui-card ">
-				<form class="mui-input-group">
-					<div class="mui-input-row">
-						<label>数量：</label>
-						<div class="mui-numbox">
-							<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
-							<input class="mui-input-numbox" type="number" />
-							<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+		<div id="vue" v-cloak>
+			<nav class="mui-bar mui-bar-tab no-border">
+				<a class=" mui-col-xs-12 mui-btn mui-btn-blue" v-on:click="toPayment">
+					立即支付
+				</a>
+			</nav>
+			<div class="mui-content my number">
+				<div class="mui-card">
+					<div class="mui-table-view">
+						<div class="mui-table-view-cell mui-media">
+							<a href="javascript:;">
+								<img class="mui-media-object mui-pull-left" src="images/raw_1531743738.png">
+								<div class="mui-media-body">
+									<h5>{{data.goods.title}}</h5>
+									<h5>{{data.goods.subTitle}}</h5>
+									<p v-if="data.city != null">{{data.city.country}} {{data.city.name}}</p>
+								</div>
+							</a>
 						</div>
 					</div>
+				</div>
+				<div class="mui-card ">
+					<form class="mui-input-group">
+						<div class="mui-input-row">
+							<label>数量：</label>
+							<div class="mui-numbox" data-numbox-min='1'>
+								<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+								<input class="mui-input-numbox" v-model="data.num" v-on:change="changeNum" type="number" />
+								<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="mui-card ">
+					<form class="mui-input-group">
+						<div class="mui-input-row">
+							<label>订单金额：</label>
+							<div class=" mui-text-right blue">￥{{data.goods.price*data.num}}</div>
+						</div>
 
-				</form>
+					</form>
+				</div>
+				<div class="mui-card">
+					<form class="mui-input-group">
+						<div class="mui-input-row">
+							<label>手机号码：</label>
+							<input type="text" v-model="data.phone"  placeholder="输入手机号">
+						</div>
+					</form>
+				</div>
 			</div>
-			<div class="mui-card ">
-				<form class="mui-input-group">
-					<div class="mui-input-row">
-						<label>订单金额：</label>
-						<div class=" mui-text-right blue">￥40</div>
-					</div>
-
-				</form>
-			</div>
-			<div class="mui-card">
-				<form class="mui-input-group">
-					<div class="mui-input-row">
-						<label>手机号码：</label>
-						<input type="text" placeholder="输入手机号">
-					</div>
-
-				</form>
-			</div>
-
 		</div>
 		<script type="text/javascript" charset="utf-8">
-		
-			function toPayment(){
-				/*wx.miniProgram.navigateTo({
-					url: '/pages/utils/pay'
-				})*/
-				wx.miniProgram.navigateTo({
-					url: '/pages/payment/payment'
-				})
-			}
-			mui.plusReady(function() {
-				//获得slider插件对象
-				var gallery = mui('.mui-slider');
-				gallery.slider({
-					interval: 5000 //自动轮播周期，若为0则不自动播放，默认为0；
-				});
-			});
-			
+			var payParams;
 			var vue1 = new Vue({
-				el: '#content',
+				el: '#vue',
 				data: {
-					data:{}
+					data: {
+						goods: {},
+						city: myLocalStorage.getItem("city"),
+						num: 1,
+						phone: "15800418543"
+					}
 				},
 				updated: function() {
-					this.$nextTick(function() {
-
-					})
+					this.$nextTick(function() {})
 				},
 				methods: {
-					chooseCity: function(event) {
-						wx.miniProgram.navigateBack();
+					changeNum: function(event) {
+						this.data.num = event.currentTarget.value
+					},
+					toPayment: function() {
+						var reg = /^((13|14|15|17|18)[0-9]{1}\d{8})$/;
+						if(!reg.test(this.data.phone)) {
+							mui.toast("手机格式不正确！");
+							return;
+						}
+						loadWeixin();//请求微信参数
+						//微信支付参数获取成功
+						if(payParams != null){
+							payParams.notorderid.package = encodeURI(encodeURI(payParams.notorderid.package))
+							var requestParam = JSON.stringify(payParams);
+							requestParam = requestParam.replace(/=/g,'~');//由于等号导致的传参问题需要特殊处理
+							wx.miniProgram.navigateTo({
+								url: "/pages/utils/pay?requestParam="+requestParam
+							})
+						}
 					}
-				}
+				},
+				watch: {}
 			});
+			
+			
 
-			function loadCountryData() {
+			function loadGoodsDetail() {
 				$.ajax({
 					dataType: "json",
 					type: "get",
-					url: basePath + "/services/allcities",
+					headers: {
+						'Content-Type': 'application/json',
+						'token': myLocalStorage.getItem("token")
+					},
+					url: basePath + "services/xcx/goods/" + myLocalStorage.getItem("goodsId") + "/detail",
 					data: {},
-					success: function(result) {
-						if(result.status == 0) {
-							vue1.countries = result.result.countries;
-						}
-						var cities = result.result.cities
-						for(var i = 0; i < cities.length; i++) {
-							var city = cities[i];
-							if(param.cityName.indexOf(city.name) != -1) {
-								alert(city.name)
-								vue1.pointCity = city;
-							}
+					success: function(res) {
+						if(res.status == 0) {
+							vue1.data.goods = res.result;
+						} else {
+							mui.toast(res.errmsg)
 						}
 					},
 					error: function(result) {
@@ -138,8 +141,38 @@
 					}
 				});
 			}
+
+			function loadWeixin() {
+				$.ajax({
+					dataType: "json",
+					type: "post",
+					async:false,
+					headers: {
+						'Content-Type': 'application/json',
+						'token': myLocalStorage.getItem("token")
+					},
+					url: basePath + "services/v2/pay/microapp",
+					data: JSON.stringify({
+						"type": "map",
+						"id": myLocalStorage.getItem("goodsId"),
+						"size":vue1.data.num
+					}),
+					success: function(res) {
+						if(res.status == 0) {
+							payParams = res.result;
+						} else {
+							mui.toast(res.errmsg);
+						}
+					},
+					error: function(result) {
+						mui.toast("请求遇到问题!");
+					}
+				});
+			}
 			
-				
+			$(function() {
+				loadGoodsDetail();
+			})
 		</script>
 	</body>
 

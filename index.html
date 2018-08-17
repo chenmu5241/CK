@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
-		<!--<title>玩转CK小镇</title>-->
+		<title>玩转CK小镇</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -23,20 +22,29 @@
 		<script src="js/mui.pullToRefresh.js"></script>
 		<script src="js/mui.pullToRefresh.material.js"></script>
 		<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+		<style>
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+				margin-bottom: 0px;
+			}
+		</style>
 	</head>
 
 	<body>
 		<nav class="mui-bar mui-bar-tab">
-			<a class="mui-tab-item col-sm-6 mui-active" href="#item1">
+			<a class="mui-tab-item col-sm-6 mui-active" href="#v1">
 				<i class="fa fa-shopping-cart"></i>商城
 			</a>
-			<a class="mui-tab-item col-sm-6 " href="#item2">
+			<a class="mui-tab-item col-sm-6 " href="#v2">
 				<i class="fa fa-user-o"></i>我的
 			</a>
 		</nav>
 		<div class="mui-content" id="mui-content" v-cloak>
-
-			<div id="item1" class="mui-control-content mui-active">
+			<div id="v1" class="mui-control-content mui-active">
 				<div class="mui-scroll-wrapper">
 					<div class="mui-scroll" id="refresh_container1">
 						<div class="mui-row">
@@ -52,7 +60,7 @@
 							</div>
 
 							<div class="mui-card" v-for="item in data.list" v-bind:key="item.id">
-								<div class="mui-card-header mui-card-media" v-on:click="toDetail(item.id)">
+								<div class="mui-card-header mui-card-media" v-on:click="toProductdetail(item.id)">
 									<img :src="item.cover" />
 									<div class=" mui-clearfix"></div>
 								</div>
@@ -76,94 +84,65 @@
 				</div>
 			</div>
 
-			<div id="item2" class="mui-control-content">
-				<div class="mui-content my">
-					<div class="user">
-						<div class="img"><img :src="data.userInfo.avatarUrl"></div>
-						<div class="name">{{data.userInfo.nickName}}</div>
-						<div class="mui-clearfix"></div>
-					</div>
-
-					<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
-						<a class="mui-control-item mui-col-xs-6 mui-active" href="#item1">
-							<div>我的订单</div>
-						</a>
-						<a class="mui-control-item mui-col-xs-6" href="#item2">
-							<div>语音导览</div>
-						</a>
-
-					</div>
-					<div>
-						<div id="item1" class="mui-control-content mui-active">
-							<div class="mui-card order" onclick="toOrderDetail(0)">
-								<div class="mui-table-view">
-									<div class=" mui-media">
-										<a href="order.html">
-											<p class="orderno">订单编号:201705016265</p>
-											<div class="orderbox">
-												<div>
-													<h5>商品名称</h5>
-													<p>赠送ck语音导览</p>
+			<div id="v2" class="mui-control-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll" id="refresh_container2">
+						<div class="mui-content my">
+							<div class="user">
+								<div class="img"><img :src="data.userInfo.avatarUrl"></div>
+								<div class="name">{{data.userInfo.nickName}}</div>
+								<div class="mui-clearfix"></div>
+							</div>
+							<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-primary">
+								<a class="mui-control-item mui-col-xs-6 mui-active" href="#item1">
+									<div>我的订单</div>
+								</a>
+								<a class="mui-control-item mui-col-xs-6" href="#item2">
+									<div>语音导览</div>
+								</a>
+							</div>
+							<div>
+								<div id="item1" class="mui-control-content mui-active">
+									<!--订单列表-->
+									<div class="mui-card order" v-for="item in data.orders" v-bind:key="item.id">
+										<div class="mui-table-view" style="margin-top:0px">
+											<div class=" mui-media">
+												<div class="orderdiv" :orderid="item.id">
+													<p class="orderno">订单编号:{{item.ordernumber}}</p>
+													<div class="orderbox">
+														<div>
+															<h5>{{item.goods.title}}</h5>
+															<p>{{item.goods.subTitle}}</p>
+														</div>
+														<div class="blue ">￥{{item.amount}}</div>
+														<div class="mui-clearfix"></div>
+													</div>
 												</div>
-												<div class="blue ">￥18</div>
-												<div class="mui-clearfix"></div>
-											</div>
-										</a>
-										<div class="pay">2017-12-05 15:30<button class="mui-pull-right mui-btn mui-btn-yellow">去支付</button></div>
-									</div>
-								</div>
-							</div>
-							<div class="mui-card order" onclick="toOrderDetail(0)">
-								<div class="mui-table-view">
-									<div class=" mui-media">
-										<a href="order.html">
-											<p class="orderno">订单编号:201705016265</p>
-											<div class="orderbox">
-												<div>
-													<h5>商品名称</h5>
-													<p>赠送ck语音导览</p>
+												<div class="pay">{{item.ordertime}}
+													<button class="mui-pull-right mui-btn mui-btn-grey" v-show="item.orderstatus == 1">已支付</button>
+													<button class="mui-pull-right mui-btn mui-btn-yellow" v-show="item.orderstatus != 1" v-on:click="toPay(item.id)">去支付</button>
 												</div>
-												<div class="blue">￥18</div>
-												<div class="mui-clearfix"></div>
 											</div>
-										</a>
-										<div class="pay">2017-12-05 15:30<button class="mui-pull-right mui-btn mui-btn-grey">已支付</button></div>
+										</div>
+									</div>
+								</div>
+								<div id="item2" class="mui-control-content">
+									<div class="mui-card" v-on:click="toDetail(item.lineid)" v-for="item in data.audios" v-bind:key="item.lineid">
+										<div class="mui-table-view linediv" :lineid="item.lineid" style="margin-top:0px">
+											<div class="mui-table-view-cell mui-media">
+												<a>
+													<img class="mui-media-object mui-pull-left" :src="item.thumbs">
+													<div class="mui-media-body">
+														<h5>{{item.linename}}</h5>
+														<span v-for="lable in item.labels.split(',')">{{lable}}</span>
+														<p>{{item.country}} {{item.city}}</p>
+													</div>
+												</a>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
-
-						</div>
-						<div id="item2" class="mui-control-content">
-							<div class="mui-card" onclick="toDetail(1)">
-								<div class="mui-table-view">
-									<div class="mui-table-view-cell mui-media">
-										<a href="javascript:;">
-											<img class="mui-media-object mui-pull-left" src="images/raw_1531743738.png">
-											<div class="mui-media-body">
-												<h5>CK艺术城堡之旅CK艺术城堡之旅CK艺术城堡之旅CK艺堡之旅CK艺术城堡之术城堡之</h5>
-												<span>国语</span><span>亲切</span>
-												<p>国家地区 城市名称</p>
-											</div>
-										</a>
-									</div>
-								</div>
-							</div>
-
-							<div class="mui-card " onclick="toDetail(1)">
-								<div class="mui-table-view">
-									<div class="mui-table-view-cell mui-media">
-										<a href="javascript:;">
-											<img class="mui-media-object mui-pull-left" src="images/raw_1531743738.png">
-											<div class="mui-media-body">
-												<h5>CK艺术城堡之旅</h5>
-												<span>国语</span><span>亲切</span>
-												<p>国家地区 城市名称</p>
-											</div>
-										</a>
-									</div>
-								</div>
-							</div>
-
 						</div>
 					</div>
 
@@ -177,18 +156,21 @@
 			function initHeight() {
 				var navH = $("nav").height();
 				var dh = $(document).height();
-				$("#item1").css("height", dh - navH + 2);
+				$("#v1").css("height", dh - navH);
+				$("#v2").css("height", dh - navH);
 			}
 
 			var vue1 = new Vue({
 				el: '#mui-content',
 				data: {
 					data: {
-						city:{},
+						city: {},
 						list: [],
 						weatherToday: {},
 						weatherClass: null,
 						userInfo: {},
+						orders: [],
+						audios: []
 					}
 				},
 				updated: function() {
@@ -205,15 +187,29 @@
 						console.log("到详情页面");
 						myLocalStorage.setItem("goodsId", id);
 						wx.miniProgram.navigateTo({
+							url: '/pages/detail/detail'
+						})
+					},
+					toProductdetail: function(id) {
+						console.log("到产品详情页面");
+						myLocalStorage.setItem("goodsId", id);
+						wx.miniProgram.navigateTo({
 							url: '/pages/productdetail/productdetail'
 						})
 					},
 					toBuy: function(id) {
+						myLocalStorage.setItem("goodsId", id);
 						console.log("到订购页面");
 						wx.miniProgram.navigateTo({
 							url: '/pages/orderconfirm/orderconfirm'
 						})
 					},
+					toPay: function(id) {
+						console.log("支付");
+						wx.miniProgram.navigateTo({
+							url: '/pages/utils/pay'
+						})
+					}
 				},
 				watch: {
 					"data.weatherToday": function(weatherToday, oldVal) {
@@ -250,7 +246,10 @@
 				if(myLocalStorage.getItem("city") != null && myLocalStorage.getItem("city") != "") {
 					pageVo.cityId = myLocalStorage.getItem("city").id;
 					vue1.data.city = myLocalStorage.getItem("city");
-					console.log(myLocalStorage.getItem("city"));
+				}else{
+					var defaultCity = {"continent":"EU","fname":"克魯姆洛夫","country":"捷克","ename":"Český Krumlov","lng":"14.3037233","keywords":"Český Krumlov 克鲁姆洛夫 kelumuluofu","name":"克鲁姆洛夫","id":765,"pictures":"http://cncdn.imguider.com/assets/city/v2/765.jpg","lat":"48.8123406","tags":"guide,line"}
+					vue1.data.city = defaultCity;
+					myLocalStorage.setItem("city",defaultCity)
 				}
 			}
 
@@ -258,24 +257,22 @@
 				$.ajax({
 					dataType: "json",
 					type: "post",
-					async:false,
+					async: false,
 					headers: {
 						'Content-Type': 'application/json'
 					},
 					url: basePath + "services/tourist3rd",
-					data: JSON.stringify(
-						{
-						    "openid":"o07L9wI9SuHJef4Gf5wfR-xKYN2I",
-						    "opentype":"wechat",
-						    "realname":vue1.data.nickName,
-						    "headimg":vue1.data.avatarUrl,
-						    "gender":vue1.data.gender
-						}
-					),
+					data: JSON.stringify({
+						"openid": myLocalStorage.getItem("openid"),
+						"opentype": "wechat",
+						"realname": vue1.data.nickName,
+						"headimg": vue1.data.avatarUrl,
+						"gender": vue1.data.gender
+					}),
 					success: function(res) {
 						if(res.status == 0) {
-							myLocalStorage.setItem("account",res.result)
-							myLocalStorage.setItem("token",res.result.token)
+							myLocalStorage.setItem("account", res.result)
+							myLocalStorage.setItem("token", res.result.token)
 						} else {
 							mui.toast(result.message)
 						}
@@ -290,10 +287,19 @@
 			var pageVo = {
 				pageNo: 0,
 				pageSize: 10,
-				cityId: 765
+				cityId: 765//默认城市id
+			}
+			var pageVo1 = {
+				pageNo: 0,
+				pageSize: 10
+			}
+			var pageVo2 = {
+				pageNo: 0,
+				pageSize: 10
 			}
 
 			$(function() {
+				console.log(myLocalStorage.getItem("token"));
 				//设置滚动区域的高度
 				initHeight();
 				//初始化页面
@@ -301,6 +307,39 @@
 				//用户登录
 				userLogin();
 
+				mui("#item1").on("tap", ".orderdiv", function() {
+					console.log("到订单详情页面");
+//					myLocalStorage.setItem("orderId", $(this).attr("orderid"));
+					wx.miniProgram.navigateTo({
+						url: '/pages/orderdetail/orderdetail?orderId='+$(this).attr("orderid")
+					})
+				})
+				mui("#item2").on("tap", ".linediv", function() {
+					console.log("语音导览详情页面");
+					myLocalStorage.setItem("lineid", $(this).attr("lineid"));
+					wx.miniProgram.navigateTo({
+						url: '/pages/detail/detail'
+					})
+				})
+
+				var flag0 = true,
+					flag1;
+				mui("#segmentedControl").on("tap", "a", function() {
+					var index = $(this).index();
+					var flag;
+					if(index == 0) {
+						flag = flag0;
+						flag0 = true;
+					} else if(index == 1) {
+						flag = flag1;
+						flag1 = true;
+					}
+					if(!flag) {
+						pullToRefresh2.pullDownLoading();
+					} else {
+						pullToRefresh2.refresh(true);
+					}
+				});
 				//刷新组件对象
 				var pullToRefresh1 = mui('#refresh_container1').pullToRefresh({
 					up: {
@@ -323,8 +362,8 @@
 											if(res.result.weather != null && res.result.weather.length > 0) {
 												vue1.data.weatherToday = res.result.weather[0] //今天天气数据
 											}
-											_self.endPullUpToRefresh(res.result.content.length==0);
-											if(res.result.content.length > 0){
+											_self.endPullUpToRefresh(res.result.content.length == 0);
+											if(res.result.content.length > 0) {
 												pageVo.pageNo += 1;
 											}
 										} else {
@@ -340,6 +379,105 @@
 					}
 				});
 
+				//刷新组件对象
+				var pullToRefresh2 = mui('#refresh_container2').pullToRefresh({
+					down: {
+						callback: function() {
+							var _self = this;
+							setTimeout(function() {
+								var url = basePath + "services/xcx/goods/orders";
+								var index = $("#segmentedControl").children(".mui-active").index();
+
+								var tempPageVo;
+								if(index == 0) {
+									tempPageVo = pageVo1;
+									url = basePath + "services/xcx/goods/orders";
+								} else if(index == 1) {
+									tempPageVo = pageVo2;
+									url = basePath + "services/xcx/goods/audios";
+								}
+								tempPageVo.pageNo = 1
+								$.ajax({
+									dataType: "json",
+									type: "post",
+									headers: {
+										'Content-Type': 'application/json',
+										'token': myLocalStorage.getItem("token")
+									},
+									url: url,
+									data: JSON.stringify(tempPageVo),
+									success: function(res) {
+										if(res.status == 0) {
+											if(index == 0) {
+												vue1.data.orders = res.result.content; //list数据
+											} else {
+												vue1.data.audios = res.result.content //list数据
+											}
+											_self.endPullUpToRefresh(res.result.content.length == 0);
+											tempPageVo.pageNo += 1;
+											_self.endPullDownToRefresh();
+											_self.refresh(res.result.content.length != 0); //显示加载更多
+										} else {
+											mui.toast(result.message)
+										}
+									},
+									error: function(result) {
+										mui.toast("error!")
+									}
+								});
+							}, 500);
+						}
+					},
+					up: {
+						auto: true, //默认执行一次上拉加载
+						callback: function() {
+							var url = basePath + "services/xcx/goods/orders";
+							var index = $("#segmentedControl").children(".mui-active").index();
+
+							var tempPageVo;
+							if(index == 0) {
+								tempPageVo = pageVo1;
+								url = basePath + "services/xcx/goods/orders";
+							} else if(index == 1) {
+								tempPageVo = pageVo2;
+								url = basePath + "services/xcx/goods/audios";
+							}
+
+							var _self = this;
+							setTimeout(function() {
+								$.ajax({
+									dataType: "json",
+									type: "post",
+									headers: {
+										'Content-Type': 'application/json',
+										'token': myLocalStorage.getItem("token")
+									},
+									url: url,
+									data: JSON.stringify(tempPageVo),
+									success: function(res) {
+										if(res.status == 0) {
+											if(index == 0) {
+												vue1.data.orders = vue1.data.orders.concat(res.result.content); //小镇list数据
+											} else {
+												vue1.data.audios = vue1.data.audios.concat(res.result.content); //小镇list数据
+											}
+
+											_self.endPullUpToRefresh(res.result.content.length == 0);
+											if(res.result.content.length > 0) {
+												tempPageVo.pageNo += 1;
+											}
+										} else {
+											mui.toast(res.errmsg)
+										}
+									},
+									error: function(result) {
+										mui.toast("请求遇到问题!")
+									}
+								});
+							}, 500);
+						}
+					}
+				});
 			})
 		</script>
 	</body>

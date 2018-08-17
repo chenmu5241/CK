@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<!--<title>CK小镇浪漫通话之旅</title>-->
+		<title>CK小镇浪漫童话之旅</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -14,10 +14,19 @@
 		<link rel="stylesheet" href="css/swiper.css">
 		<!--App自定义的css-->
 		<link rel="stylesheet" type="text/css" href="css/app.css" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/app.js"></script>
+		<script src="js/vue.min.js"></script>
+		<script src="js/swiper.js"></script>
 		<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
-		<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=CAZBZ-4TR6O-QKNWH-SNA42-KKXDV-GQBNR"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=8OUBz45oROYf20Vs5aOq7YpDGtPxSm7a"></script>
 		<style>
-			.smnoprint{
+			.smnoprint {
+				display: none;
+			}
+			
+			.anchorBL {
 				display: none;
 			}
 		</style>
@@ -28,83 +37,53 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">CK小镇浪漫童话之旅</h1>
 		</header>-->
-		<nav class="mui-bar mui-bar-tab no-border">
+		<nav class="mui-bar mui-bar-tab no-border" id="nav" v-cloak>
 			<div class="pos-fix">
-				<div class="line mui-text-center" id="consultBtn">请教<br/>行家</div>
-				<div class="line mui-text-center"  id="commentBtn"><i class="fa fa-pencil"></i>点评</div>
+				<div class="line mui-text-center" v-on:click="toWritequestion(data)">请教<br/>行家</div>
+				<div class="line mui-text-center" v-on:click="toWriteComment(data)"><i class="fa fa-pencil"></i>点评</div>
 			</div>
 			<div class="mui-slider">
 				<div class="mui-slider-group">
-					<div class="mui-slider-item ">
+
+					<!--循环讲解点-->
+					<div class="mui-slider-item" v-for="(record,index) in data.records">
 						<div class="mui-slider-box pos-rel">
-							<div class="pos-rel mui-media-object mui-pull-left">
-								<img src="images/raw_1531745438.png" class=" img-responsive" />
+							<div class="pos-rel mui-media-object mui-pull-left" v-on:click="play(record,$event)">
+								<img :src="record.pics[0]" v-if="record.pics!=null" class=" img-responsive" />
 								<div class="pos-abs">
 									<i class="faplay fa fa-play-circle"></i>
 								</div>
+								<audio :src="record.playpath" hidden='true' controls>
+								</audio>
 							</div>
 							<div class="mui-media-body">
-								<h5>1.观景台--三维地图</h5>
-								<p>02:23<span>左右滑动切换讲解点</span></p>
+								<h5>{{index+1}}.{{record.spotname}}</h5>
+								<p>{{record.audiotime}}<span>左右滑动切换讲解点</span></p>
 							</div>
 							<div class="pos-abs location">
-								<a id="navigationBtn"><i class=" fa fa-location-arrow" ></i></a>
-								<a id="navigationBtn1"><i class=" fa fa-bullseye"></i></a>
+								<a v-on:click="toNavigation(record,$event)"><i class=" fa fa-location-arrow"></i></a>
+								<a v-on:click="locate(index+1,record,$event)"><i class=" fa fa-bullseye"></i></a>
 							</div>
 						</div>
 						<div class="travelbox">
-							<div class="swiper-container gallery-top">
+							<div class="swiper-container gallery-top" v-bind:class="'top'+index">
 								<div class="swiper-wrapper">
-									<div class="swiper-slide">
-										<img src="images/raw_1531745438.png" class=" img-responsive" />
-									</div>
-									<div class="swiper-slide">
-										<img src="images/raw_1531745438.png" class=" img-responsive" />
-									</div>
-									<div class="swiper-slide">
-										<img src="images/raw_1531745438.png" class=" img-responsive" />
-									</div>
-									<div class="swiper-slide">
-										<img src="images/raw_1531745438.png" class=" img-responsive" />
+									<div class="swiper-slide" v-for="pic in record.pics">
+										<img :src="pic" class=" img-responsive" />
 									</div>
 								</div>
 							</div>
-							<div class="swiper-container gallery-thumbs">
+							<div class="swiper-container gallery-thumbs" v-bind:class="'thumbs'+index">
 								<div class="swiper-wrapper">
-									<div class="swiper-slide">
+									<div class="swiper-slide" v-for="pic in record.pics">
 										<div class="slideimg">
-											<img src="images/raw_1531745438.png" class=" img-responsive" /> 讲解点名称
-										</div>
-										<img src="images/walk.png" class="walk" />
-									</div>
-									<div class="swiper-slide">
-										<div class="slideimg">
-											<img src="images/raw_1531745438.png" class=" img-responsive" /> 讲解点名称
-										</div>
-										<img src="images/raw_1531745438.png" class="walk" />
-									</div>
-									<div class="swiper-slide">
-										<div class="slideimg">
-											<img src="images/raw_1531745438.png" class=" img-responsive" /> 讲解点名称
-										</div>
-										<img src="images/walk.png" class="walk" />
-									</div>
-									<div class="swiper-slide">
-										<div class="slideimg">
-											<img src="images/raw_1531745438.png" class=" img-responsive" /> 讲解点名称
+											<img :src="pic" class=" img-responsive" /> 讲解点名称
 										</div>
 										<img src="images/walk.png" class="walk" />
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-
-					<div class="mui-slider-item">
-						1777680780
-					</div>
-					<div class="mui-slider-item">
-						1777680780
 					</div>
 				</div>
 			</div>
@@ -113,109 +92,248 @@
 		</nav>
 
 		<div class="mui-content">
-
-			<div id="container" ></div>
-
-			<!--<div class="pos-rel"> <img src="images/staticmap_zh-CN.png" class=" img-responsive" />
-
-				<div class="lacation">1</div>
-				<div class="lacationimg"><img src="images/raw_1531745438.png" class=" img-responsive img-circle"></div>
-			</div>-->
-
+			<div id="allmap"></div>
 		</div>
-
-		<script src="js/mui.min.js"></script>
-		<script src="js/jquery.min.js"></script>
-		<script src="js/swiper.js"></script>
 		<script type="text/javascript">
-			$("#container").height($(window).height() - $("header").height() - $(".mui-bar-tab").height())
-			
-			//自定义Overlay代码开始 =================================================
-			var myOverlay=function(opts){
-				qq.maps.Overlay.call(this, opts);
-			};
-			//继承Overlay基类
-			myOverlay.prototype = new qq.maps.Overlay();
-			//实现构造方法
-			myOverlay.prototype.construct = function() {
-			    var div = this.dom = document.createElement("div");
-			    this.dom.style.cssText= 'position:absolute;margin-top:0px;margin-left:0px';
-			    this.dom.innerHTML = this.get('inithtml');
-			    //将dom添加到覆盖物层
-			    var panes = this.getPanes();
-			    //设置panes的层级，overlayMouseTarget可接收点击事件
-			    panes.overlayMouseTarget.appendChild(div);
-			    var self = this;
-			    this.dom.onclick = function() {
-			    	if($(self.dom.innerHTML).hasClass("lacation")){
-			    		var old = $(".lacationimg");
-			    		old.parent().html(balabala1);
-			    		self.dom.innerHTML = balabala2;
-			    	}
-			    }
-			};
-			
-			//自定义的方法，用于设置myOverlay的html
-			myOverlay.prototype.html=function(html){
-				this.dom.innerHTML=html;
+			//设置高度
+			$("#allmap").height($(window).height() - $("#nav").height());
+
+			// 百度地图API功能
+			var map = new BMap.Map("allmap");
+			map.centerAndZoom(new BMap.Point(116.407845, 39.914101), 15);
+			map.enableScrollWheelZoom();
+			// 复杂的自定义覆盖物
+			function ComplexCustomOverlay(point, html) {
+				this._point = point;
+				this._html = html;
 			}
-			//实现绘制覆盖物的方法（覆盖物的位置在此控制）
-			myOverlay.prototype.draw = function() {
-				//获取地理经纬度坐标
-				var position = this.get('position');
-				if (position) {
-					var pixel = this.getProjection().fromLatLngToDivPixel(position);
-					this.dom.style.left = pixel.getX()+ 'px';
-					this.dom.style.top = pixel.getY() + 'px';
+			ComplexCustomOverlay.prototype = new BMap.Overlay();
+			ComplexCustomOverlay.prototype.initialize = function(map) {
+				this._map = map;
+				var div = this._div = document.createElement("div");
+				div.style.position = "absolute";
+				div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat);
+				div.innerHTML = this._html;
+
+				div.addEventListener("touchstart", function() {
+					if($(this).children().hasClass("lacationimg")) {
+						console.log("不做任何操作");
+					} else {
+						var index = $(this).children().attr("index");
+						var record = vue1.data.records[index - 1];
+						vue1.curRecordsIndex = index;
+						vue1.curRecords = record;
+						gallery.gotoItem(index - 1); //到对应的播放record
+
+						var oldIndex = $(".lacationimg").attr("index");
+						var balabala1 = '<div class="lacation" index="' + oldIndex + '" style="margin-top:-30px;margin-left:-12px">' + oldIndex + '</div>';
+						$(".lacationimg").parent().html(balabala1); //修改原中心点
+
+						var balabala2 = '<div class="lacationimg" index="' + index + '" style="margin-top:-38px;margin-left:-18px;"><img src="' + record.pics[0] + '"  class=" img-responsive img-circle"></div>';
+						$(this).html(balabala2);
+						//重设中心点
+						var point = new BMap.Point(record.lng, record.lat);
+						map.setCenter(point);
+					}
+				});
+				map.getPanes().labelPane.appendChild(div);
+				return div;
+			}
+			ComplexCustomOverlay.prototype.draw = function() {
+				var map = this._map;
+				var pixel = map.pointToOverlayPixel(this._point);
+				this._div.style.left = pixel.x + "px";
+				this._div.style.top = pixel.y + "px";
+			}
+
+			var gallery = null; //左右切换record轮播块
+			var vue1 = new Vue({
+				el: '#nav',
+				data: {
+					data: {},
+					doubleRecords: [],
+					curRecords:{},
+					curRecordsIndex: null
+				},
+				updated: function() {
+					this.$nextTick(function() {
+						//初始化左右切换record
+						gallery = mui('.mui-slider').slider();
+						//初始化每个record的图片轮播
+						$(".mui-slider-item").each(function(index) {
+							var loop = true;
+							//如果图片只有一个时做特殊处理
+							if($(".top" + index).find(".swiper-slide").length <= 1) {
+								loop = false;
+							}
+
+							var galleryTop = new Swiper('.top' + index, {
+								spaceBetween: 10,
+								loop: loop,
+								loopedSlides: 5, //looped slides should be the same
+								navigation: {
+									nextEl: '.swiper-button-next',
+									prevEl: '.swiper-button-prev',
+								},
+							});
+
+							var galleryThumbs = new Swiper('.thumbs' + index, {
+								spaceBetween: 10,
+								slidesPerView: 4,
+								touchRatio: 0.2,
+								loop: loop,
+								loopedSlides: 5, //looped slides should be the same
+								slideToClickedSlide: true,
+							});
+
+							galleryThumbs.controller.control = galleryTop;
+							galleryTop.controller.control = galleryThumbs;
+						})
+					})
+				},
+				methods: {
+					toWritequestion: function(line) {
+						console.log("请教行家");
+						myLocalStorage.setItem("line", line);
+						wx.miniProgram.navigateTo({
+							url: '/pages/writequestion/writequestion'
+						})
+					},
+					toWriteComment: function(line) {
+						console.log(vue1.curRecords);
+						console.log("写点评");
+						if(!vue1.curRecords.canplay) { //没购买卖过
+							mui.toast("您还未购买，无法评论！");
+							return;
+						}
+						myLocalStorage.setItem("line", line);
+						wx.miniProgram.navigateTo({
+							url: '/pages/writecomment/writecomment'
+						})
+					},
+					play: function(record, e) {
+						
+						if(!record.canplay) { //没购买卖过
+							mui.toast("您还未购买，无法播放！");
+							return;
+						}
+
+						var audio = $(e.currentTarget).find("audio")[0]; //转换成dom
+						if($(e.currentTarget).find(".faplay").hasClass("fa-play-circle")) {
+							$(e.currentTarget).find(".faplay").addClass("fa-pause-circle-o");
+							$(e.currentTarget).find(".faplay").removeClass("fa-play-circle")
+							audio.play();
+						} else {
+							$(e.currentTarget).find(".faplay").removeClass("fa-pause-circle-o");
+							$(e.currentTarget).find(".faplay").addClass("fa-play-circle")
+							audio.pause();
+						}
+					},
+					toNavigation: function(record, event) {
+						if(record.lat == null) {
+							mui.toast("目的地位置不确定!");
+							return;
+						}
+						console.log("开始导航");
+						var geolocation = new BMap.Geolocation();
+						geolocation.getCurrentPosition(function(r) {
+							if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+								var mk = new BMap.Marker(r.point);
+								map.addOverlay(mk);
+								//map.panTo(r.point);//地图中心点移到当前位置
+								var latCurrent = r.point.lat;
+								var lngCurrent = r.point.lng;
+								
+								location.href = "http://api.map.baidu.com/direction?origin=" +latCurrent + "," + lngCurrent +
+									"&destination=" + record.lat + "," + record.lng +
+									"&mode=driving&title=" + record.spotname +
+									"&region=" + record.spotname + "&output=html";
+//								location.href = "http://api.map.baidu.com/direction?origin=" + (record.lat - 0.02) + "," + record.lng +
+//									"&destination=" + record.lat + "," + record.lng +
+//									"&mode=driving&title=" + record.spotname +
+//									"&region=" + record.spotname + "&output=html";
+							} else {
+								mui.toast("无法获取您的位置！")
+							}
+						}, {
+							enableHighAccuracy: true
+						})
+					},
+					locate: function(index, record, event) {
+						if($("[index=" + index + "]").hasClass("lacationimg")) {
+							console.log("不做任何操作");
+						} else {
+							if(record.lng == null){
+								return;	
+							}
+							vue1.curRecordsIndex = index;
+							vue1.curRecords = record;
+							var oldIndex = $(".lacationimg").attr("index");
+							var balabala1 = '<div class="lacation" index="' + oldIndex + '" style="margin-top:-30px;margin-left:-12px">' + oldIndex + '</div>';
+							$(".lacationimg").parent().html(balabala1); //修改原中心点
+							var balabala2 = '<div class="lacationimg" index="' + index + '" style="margin-top:-38px;margin-left:-18px;"><img src="' + record.pics[0] + '"  class=" img-responsive img-circle"></div>';
+							$("[index=" + index + "]").parent().html(balabala2);
+							//重设中心点
+							var point = new BMap.Point(record.lng, record.lat);
+							map.setCenter(point);
+						}
+					}
+
+				},
+				watch: {
+					"data.records": function(records) {
+						for(var i = 0; i < records.length; i++) {
+							var record = records[i];
+							var pics = record.spotpictures.split(",");
+							record.pics = pics; //转换所有的图片成数组
+							vue1.curRecords = record;
+							var balabala1 = '<div class="lacation" index="' + (i + 1) + '" style="margin-top:-30px;margin-left:-12px">' + (i + 1) + '</div>';
+							var balabala2 = '<div class="lacationimg" index="' + (i + 1) + '" style="margin-top:-38px;margin-left:-18px;"><img src="' + pics[0] + '"  class=" img-responsive img-circle"></div>';
+							if(record.lat != null && record.lng != null && this.curRecordsIndex == null) { //默认设置
+								this.curRecordsIndex = i + 1;
+								var point = new BMap.Point(record.lng, record.lat);
+								var myCompOverlay = new ComplexCustomOverlay(point, balabala2);
+								map.addOverlay(myCompOverlay);
+								map.setCenter(point);
+							} else {
+								if(record.lat != null && record.lng != null) {
+									var point = new BMap.Point(record.lng, record.lat);
+									var myCompOverlay = new ComplexCustomOverlay(point, balabala1);
+									map.addOverlay(myCompOverlay);
+								}
+							}
+						}
+
+					}
 				}
-			};
-			//实现析构方法（类生命周期结束时会自动调用，用于释放资源等）
-			myOverlay.prototype.destroy = function() {
-				//移除dom
-				this.dom.parentNode.removeChild(this.dom);
-			};
-			//以上自定义Overlay代码结束 =================================================
-			
-			var balabala1='<div class="lacation" id="lacation" style="margin-top:-24px;margin-left:-12px">1</div>';
-			var balabala2='<div class="lacationimg" style="margin-top:-38px;margin-left:-18px;"><img src="images/raw_1531745438.png"  class=" img-responsive img-circle"></div>';
-			//初始化地图函数  自定义函数名init
-			function initMap() {
-				var center = new qq.maps.LatLng(39.916527, 116.397128);
-				var center1 = new qq.maps.LatLng(39.916527, 116.357128);
-				//定义map变量 调用 qq.maps.Map() 构造函数   获取地图显示容器
-				var map = new qq.maps.Map(document.getElementById("container"), {
-					center: center, // 地图的中心地理坐标。
-					zoom: 12// 展现地图的放大比例
-				});
-				
-				//创自定义覆盖物 myOverlay，并设置初始的html
-				var label = new myOverlay({
-					map:map,
-					position:center,
-					inithtml:balabala1,
-					top:-24,
-					marginLeft:-12
-				});
-				
-				var label1 = new myOverlay({
-					map:map,
-					position:center1,
-					inithtml:balabala2,
-					top:-38,
-					marginLeft:-18
+			});
+
+			function loadLineDetail() {
+				$.ajax({
+					dataType: "json",
+					type: "get",
+					headers: {
+						'Content-Type': 'application/json',
+						'token': myLocalStorage.getItem("token")
+					},
+					url: basePath + "services/lineinfo/" + myLocalStorage.getItem("lineid"),
+					data: {},
+					success: function(res) {
+						if(res.status == 0) {
+							vue1.data = res.result;
+						} else {
+							mui.toast(res.errmsg)
+						}
+					},
+					error: function(result) {
+						mui.toast("请求遇到问题!")
+					}
 				});
 			}
-			mui.init()
-			mui.ready(function(){
-				initMap();//初始化地图
-				
-				//导航页面
-				mui("body").on("tap","#navigationBtn",function(){
-					wx.miniProgram.navigateTo({
-						url: '/pages/navigation/navigation'
-					});
-				})
-				
+
+			$(function() {
+				loadLineDetail();
+
 				//上拉下拉事件
 				mui("body").on("swipeup", ".mui-slider", function(e) {
 					$('.travelbox').addClass('travelshow');
@@ -226,46 +344,10 @@
 				mui("body").on("swipedown", ".mui-slider", function(e) {
 					$('.travelbox').removeClass('travelshow');
 					var h = $('.mui-slider ').height();
-					$('.pos-fixa').css("bottom","74px");
+					$('.pos-fixa').css("bottom", "74px");
 					$('.pos-fix').removeClass('pos-fixa');
 				})
-				
-				//图片轮播插件
-				$(".faplay").on("click", function() {
-					if($(this).hasClass('fa-play-circle')) {
-						$(this).removeClass('fa-play-circle');
-						$(this).addClass('fa-pause-circle-o');
-					} else {
-						$(this).addClass('fa-play-circle');
-						$(this).removeClass('fa-pause-circle-o');
-					}
-				});
-	
-				var galleryTop = new Swiper('.gallery-top', {
-					spaceBetween: 10,
-					loop: true,
-					loopedSlides: 5, //looped slides should be the same
-	
-				});
-				var galleryThumbs = new Swiper('.gallery-thumbs', {
-					spaceBetween: 10,
-					slidesPerView: 4,
-	
-					touchRatio: 0.2,
-					loop: true,
-					loopedSlides: 5, //looped slides should be the same
-					slideToClickedSlide: true,
-				});
-				galleryTop.controller.control = galleryThumbs;
-				galleryThumbs.controller.control = galleryTop;
-				
-				mui("body").on("tap","#consultBtn",function(){
-					alert("请教行家");
-				})
-				mui("body").on("tap","#commentBtn",function(){
-					alert("点评");
-				})
-				
+
 			})
 		</script>
 	</body>

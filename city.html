@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<!--<title>选择城市</title>-->
+		<title>选择城市</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -45,7 +45,6 @@
 		</div>
 		<script src="js/mui.min.js"></script>
 		<script type="text/javascript">
-			
 			var param = getRequest(); //得到url参数
 			var vue1 = new Vue({
 				el: '#vue1',
@@ -54,18 +53,17 @@
 					pointCity: null
 				},
 				updated: function() {
-					this.$nextTick(function() {
-					})
+					this.$nextTick(function() {})
 				},
 				methods: {
 					chooseCity: function(city) {
-						myLocalStorage.setItem("city",city);
+						console.log(JSON.stringify(city))
+						console.log("设置城市");
+						myLocalStorage.setItem("city", city);
 						//wx.miniProgram.postMessage({ data: {city: cityName} })
-						wx.miniProgram.navigateTo(
-							{
-								url:'/pages/index/index'
-							}
-						);
+						wx.miniProgram.navigateTo({
+							url: '/pages/index/index'
+						});
 						//强制刷新首页
 						/*wx.miniProgram.reLaunch({
 							url:'/pages/index/index'
@@ -83,24 +81,26 @@
 					success: function(result) {
 						if(result.status == 0) {
 							vue1.countries = result.result.countries;
-						}
-						var cities = result.result.cities
-						for(var i = 0; i < cities.length; i++) {
-							var city = cities[i];
-							if(param.cityName){
-								if(param.cityName.indexOf(city.name) != -1) {
-									vue1.pointCity = city;
+							var cities = result.result.cities
+							for(var i = 0; i < cities.length; i++) {
+								var city = cities[i];
+								if(param.cityName) {
+									if(param.cityName.indexOf(city.name) != -1) {
+										vue1.pointCity = city;
+									}
 								}
 							}
-							
+						} else {
+							mui.toast(res.errmsg)
 						}
+
 					},
 					error: function(result) {
 						mui.toast("请求遇到问题!")
 					}
 				});
 			}
-			
+
 			$(function() {
 				loadCountryData();
 			})

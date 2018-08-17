@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<!--<title>问行家</title>-->
+		<title>问行家</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -18,6 +18,12 @@
 		<script src="js/app.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+		<style>
+			.mui-col-first{
+				margin-left: 2%;
+			}
+			
+		</style>
 	</head>
 
 	<body>
@@ -45,12 +51,42 @@
 				<span id="word" class="word pos-abs">200</span>
 				<div class="mui-clearfix"></div>
 			</div>
-
-			<div class="upload"> <i class=" fa fa-camera"></i></div>
+			<div class="mui-row">
+				
+				<div v-for="(item,index) in data.imgs" class="mui-col-xs-4" style="padding: 0px;margin-right: 0px" v-bind:class="index%3 == 0 ? 'mui-col-first':''">
+					<img style="width:100%" :src="item" />
+				</div>
+				
+				<!--<div class="mui-col-xs-4" style="padding: 0px;margin-right: 0px;margin-left: 2%;">
+					<img style="width:100%" src="http://localhost:8080/fz-upload/upload//153414237986162721.jpg" />
+				</div>
+				<div class="mui-col-xs-4" style="padding: 0px;margin-right: 0px;">
+					<img style="padding: 0px;width:100%" src="http://localhost:8080/fz-upload/upload//153414237986162721.jpg" />
+				</div>
+				<div class="mui-col-xs-4" style="padding: 0px;margin-right: 0px;">
+					<img style="padding: 0px;width:100%" src="http://localhost:8080/fz-upload/upload//153414237986162721.jpg" />
+				</div>
+				<div class="mui-col-xs-4" style="padding: 0px;margin-right: 0px;margin-left: 2%;">
+					<img style="width:100%" src="http://localhost:8080/fz-upload/upload//153414237986162721.jpg" />
+				</div>
+				<div class="mui-col-xs-4" style="padding: 0px;margin-right: 0px;">
+					<img style="padding: 0px;width:100%" src="http://localhost:8080/fz-upload/upload//153414237986162721.jpg" />
+				</div>
+				<div class="mui-col-xs-4" style="padding: 0px;margin-right: 0px;">
+					<img style="padding: 0px;width:100%" src="http://localhost:8080/fz-upload/upload//153414237986162721.jpg" />
+				</div>-->
+			</div>
+			<div class="upload" v-on:click="choosePic"> <i class=" fa fa-camera"></i></div>
 		</div>
 	</body>
 	<script type="text/javascript">
-		console.log(myLocalStorage.getItem("userInfo"));
+		function initImgs() {
+			var param = getRequest();
+			if(param.imgs != "") {
+				vue1.data.imgs = $.parseJSON(param.imgs);
+			}
+		}
+
 		var vue1 = new Vue({
 			el: '#content',
 			data: {
@@ -58,15 +94,19 @@
 					line: myLocalStorage.getItem("line"),
 					userInfo: myLocalStorage.getItem("userInfo"),
 					score: 50,
-					question: ""
+					question: myLocalStorage.getItem("question") == null ? "" : myLocalStorage.getItem("question"),
+					imgs:[]
 				}
 			},
 			updated: function() {
 				this.$nextTick(function() {})
 			},
 			methods: {
-				chooseCity: function(event) {
-					wx.miniProgram.navigateBack();
+				choosePic: function(event) {
+					console.log("拍照");
+					wx.miniProgram.navigateTo({
+						url: '/pages/utils/chooseImg?token=hello'
+					})
 				}
 			},
 			watch: {
@@ -75,13 +115,14 @@
 					if(len > 200) {
 						this.data.question = oldQuestion
 					}
-				}
+					myLocalStorage.setItem("question", this.data.question);
+				},
 			}
 		});
 
 		function submit() {
-			if(vue1.data.comment.trim() == "") {
-				mui.toast("请输入评价内容!")
+			if(vue1.data.question.trim() == "") {
+				mui.toast("请输入问题内容!")
 				return;
 			}
 			$.ajax({
@@ -91,15 +132,18 @@
 					'Content-Type': 'application/json',
 					'token': myLocalStorage.getItem("token")
 				},
-				url: basePath + "services/grade",
+				url: basePath + "services/qa/add",
 				data: JSON.stringify({
-					"comment": vue1.data.comment,
+					"qtype": 1,
+					"question": vue1.data.question,
 					"lineid": myLocalStorage.getItem("lineid"),
-					"score": vue1.data.score
+					"pictures": vue1.data.imgs.join(",")
 				}),
 				success: function(res) {
 					if(res.status == 0) {
-						mui.toast("感谢成功!")
+						myLocalStorage.removeItem("question");
+						mui.toast("提交成功!");
+						wx.navigateBack();
 					} else {
 						mui.toast(res.errmsg)
 					}
@@ -109,6 +153,11 @@
 				}
 			});
 		}
+		
+		
+		$(function(){
+			initImgs();
+		})
 	</script>
 	</body>
 

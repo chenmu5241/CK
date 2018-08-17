@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<!--<title>用户提问</title>-->
+		<title>用户提问</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -21,6 +21,16 @@
 		<script src="js/mui.pullToRefresh.js"></script>
 		<script src="js/mui.pullToRefresh.material.js"></script>
 		<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+		<style>
+			.mui-pull-bottom-tips {
+			    text-align: center;
+			    background-color: #efeff4;
+			    font-size: 15px;
+			    line-height: 40px;
+			    color: #777;
+			    margin-bottom: 40px;
+			}
+		</style>
 	</head>
 
 	<body style="background:#f8f8f8">
@@ -30,8 +40,8 @@
 			<h1 class="mui-title">用户提问</h1>
 		</header>-->
 		<div id="content" v-cloak>
-			<nav class="mui-bar mui-bar-tab no-border">
-				<a class="mui-tab-item mui-btn mui-btn-blue" v-on:click="toWritequestion(data)">
+			<nav class="mui-bar mui-bar-tab no-border" v-on:click="toWritequestion($data)">
+				<a href="javascript:void(0)" class="mui-col-xs-12 mui-btn mui-btn-blue" >
 					问行家
 				</a>
 			</nav>
@@ -42,11 +52,11 @@
 							<div class="mui-media ">
 								<h5>{{data.lineName}}</h5>
 								<div class="mui-media-object mui-pull-left pos-rel">
-									<img :src="data.guideFace" class=" img-circle img-responsive">
+									<img :src="userInfo.avatarUrl" class=" img-circle img-responsive">
 									<div class="pos-abs">V</div>
 								</div>
 								<div class="mui-media-body">
-									<h5>{{data.guideName}}</h5>
+									<h5>{{userInfo.nickName}}</h5>
 								</div>
 								<div class="mui-clearfix"></div>
 								<p>{{data.askTimes}}人提问</p>
@@ -61,18 +71,18 @@
 										<h5>{{item.touristName}}<span>{{item.createtime}}</span></h5>
 									</div>
 									<p>{{item.question}}</p>
-									<div class="answer">
+									<div class="answer" v-show="item.audiotime != null">
 										答:
 										<div class="answerbox" v-on:click="play">
 											<div class="app-voice-you">
 												<div class="app-voice-state app-voice-pause"></div>
 												<div class="app-voice-time">
-													5s</div>
+													{{item.audiotime}}s</div>
 											</div>
-											<audio src="http://cncdn.imguider.com/upload/records/20170717/3588a165-10c9-41cc-b0b0-4b0c328758ef.mp3" hidden='true' controls>
+											<audio :src="item.answer" hidden='true' controls>
 											</audio>
 										</div>
-										<span class=" mui-pull-right">人收听</span>
+										<span class="mui-pull-right">人收听</span>
 									</div>
 								</div>
 							</div>
@@ -82,11 +92,13 @@
 			</div>
 		</div>
 		<script type="text/javascript">
+			console.log(myLocalStorage.getItem("userInfo"));
 			var vue1 = new Vue({
 				el: '#content',
 				data: {
 					data: {},
-					list: []
+					list: [],
+					userInfo:myLocalStorage.getItem("userInfo")
 				},
 				updated: function() {
 					this.$nextTick(function() {})
@@ -112,6 +124,7 @@
 						}
 					},
 					toWritequestion:function(line) {
+						console.log("到问行家页面");
 						myLocalStorage.setItem("line", line);
 						wx.miniProgram.navigateTo({
 							url: '/pages/writequestion/writequestion'
@@ -122,10 +135,10 @@
 
 			//加载数据参数
 			var pageVo = {
-				pageNo: 0,
-				pageSize: 10,
-				"lineid": "22a1be26-c25d-49fe-96f7-77e24a797abd",
-				//				lineid: myLocalStorage.getItem("lineid")
+				pageno: 0,
+				pagesize: 10,
+//				"lineid": "22a1be26-c25d-49fe-96f7-77e24a797abd",
+				lineid: myLocalStorage.getItem("lineid")
 			}
 
 			$(function() {
@@ -151,7 +164,7 @@
 											vue1.list = vue1.list.concat(res.result.content); //小镇list数据
 											_self.endPullUpToRefresh(res.result.content.length == 0);
 											if(res.result.content.length > 0) {
-												pageVo.pageNo += 1;
+												pageVo.pageno += 1;
 											}
 										} else {
 											mui.toast(res.errmsg)

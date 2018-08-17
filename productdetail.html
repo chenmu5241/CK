@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<!--<title>productdetail</title>-->
+		<title>商品详情</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -25,24 +25,23 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">商品详情</h1>
 		</header>-->
-		<div class="mui-content detail productdetail" id="content" v-cloak  style="margin-bottom: 48px;">
+		<div class="mui-content detail productdetail" id="content" v-cloak style="margin-bottom: 48px;">
 			<div id="slider" class="mui-slider">
-				<div class="mui-slider-group mui-slider-loop"  v-if="data.goods.cover != null" >
+				<div class="mui-slider-group mui-slider-loop" v-if="data.goods.cover != null">
 					<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
 					<div class="mui-slider-item mui-slider-item-duplicate">
 						<a>
 							<img :src="data.goods.cover.split(',')[0]" class=" img-responsive" />
 						</a>
 					</div>
-					
-					
+
 					<!-- 第一张 -->
 					<div class="mui-slider-item" v-for="item in data.goods.cover.split(',')">
 						<a>
 							<img :src="item" class=" img-responsive" />
 						</a>
 					</div>
-					
+
 					<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
 					<div class="mui-slider-item mui-slider-item-duplicate">
 						<a>
@@ -52,10 +51,6 @@
 				</div>
 				<div class="mui-slider-indicator" v-if="data.goods.cover != null">
 					<div class="mui-indicator" v-for="item in data.goods.cover.split(',')"></div>
-					<!--<div class="mui-indicator mui-active"></div>
-					<div class="mui-indicator"></div>
-					<div class="mui-indicator"></div>
-					<div class="mui-indicator"></div>-->
 				</div>
 			</div>
 
@@ -68,7 +63,7 @@
 					<div class=" blue">￥{{data.goods.price}}</div>
 				</div>
 				<form class="mui-input-group">
-					<div class="mui-input-row mui-checkbox"  v-on:click="toNavigation(data.goods)">
+					<div class="mui-input-row mui-checkbox" v-on:click="toNavigation(data.goods)">
 						<input name="checkbox" value="Item1" type="checkbox" checked>
 						<div class="mui-pull-left">
 							<template v-if="data.goods.tips != null">
@@ -81,39 +76,18 @@
 					<div class="mui-input-row mui-checkbox ">
 						<input name="checkbox" value="Item2" type="checkbox" checked>
 						<div class="mui-pull-left">
-						<h5>赠送语音导览</h5>
+							<h5>赠送语音导览</h5>
 							<ul class="mui-table-view">
 								<li class="mui-table-view-cell" v-for="item in data.goods.links" v-bind:key="item.lineid">
 									<a class="mui-navigate-right" v-on:click="toDetail(item.lineid)">
 										<h5>{{item.linename}}</h5>
 										<div class=" mui-col-sm-12">
-											<span><i class=" fa fa-map-marker"></i>{{item.preonline}}</span>
-											<span><i class="fa fa-headphones"></i>{{item.recordcount}}</span>
+											<span><i class=" fa fa-map-marker"></i>{{item.recordcount}}</span>
+											<span><i class="fa fa-headphones"></i>{{item.visits}}</span>
 											<span><i class="fa fa-clock-o"></i>{{item.timelabel}}min</span>
 										</div>
 									</a>
 								</li>
-								
-								<!--<li class="mui-table-view-cell">
-									<a class="mui-navigate-right">
-										<h5>水上威尼斯，盘点意大利那些精致小镇</h5>
-										<div class=" mui-col-sm-12">
-											<span><i class=" fa fa-map-marker"></i>12</span>
-											<span><i class="fa fa-headphones"></i>73</span>
-											<span><i class="fa fa-clock-o"></i>60min</span>
-										</div>
-									</a>
-								</li>
-								<li class="mui-table-view-cell">
-									<a class="mui-navigate-right">
-										<h5>水上威尼斯，盘点意大利那些精致小镇</h5>
-										<div class=" mui-col-sm-12">
-											<span><i class=" fa fa-map-marker"></i>12</span>
-											<span><i class="fa fa-headphones"></i>73</span>
-											<span><i class="fa fa-clock-o"></i>60min</span>
-										</div>
-									</a>
-								</li>-->
 							</ul>
 						</div>
 
@@ -123,9 +97,9 @@
 			<div class="title">
 				<h5>商品详情</h5></div>
 			<div>
-				<div class="mui-card" v-for="item in data.goods.links"  v-on:click="toDetail(item.lineid)">
+				<div class="mui-card" v-for="item in data.goods.links" v-on:click="toDetail(item.lineid)">
 					<div class=" mui-card-media pos-rel">
-						<img src="images/raw_1531743689.png" class=" img-responsive" />
+						<img :src="item.audiopic" class=" img-responsive" />
 						<div class="pos-abs line mui-text-center">
 							<i class=" fa fa-gift"></i>赠品
 						</div>
@@ -134,8 +108,8 @@
 							<!--<span>国语</span><span>亲切</span>-->
 							<h5>{{item.linename}}</h5>
 							<div class=" mui-col-sm-12">
-								<span><i class=" fa fa-map-marker"></i>{{item.preonline}}</span>
-								<span><i class="fa fa-headphones"></i>{{item.recordcount}}</span>
+								<span><i class=" fa fa-map-marker"></i>{{item.recordcount}}</span>
+								<span><i class="fa fa-headphones"></i>{{item.visits}}</span>
 								<span><i class="fa fa-clock-o"></i>{{item.timelabel}}min</span>
 							</div>
 						</div>
@@ -144,43 +118,28 @@
 						</div>
 					</div>
 				</div>
-				
-				<!--<div class="mui-card">
-					<div class=" mui-card-media pos-rel">
-						<img src="images/raw_1531743689.png" class=" img-responsive" />
-						<div class="pos-abs line mui-text-center">
-							<i class=" fa fa-gift"></i>赠品
-						</div>
-						<div class="pos-abs style">
-							<span>国语</span><span>亲切</span>
-							<h5>CK艺术城堡之旅</h5>
-							<div class=" mui-col-sm-12">
-								<span><i class=" fa fa-map-marker"></i>12</span>
-								<span><i class="fa fa-headphones"></i>73</span>
-								<span><i class="fa fa-clock-o"></i>60min</span>
-							</div>
-						</div>
-						<div class="pos-abs way">
-							<img src="images/raw_1531815287.png" class=" img-responsive" />
-						</div>
-					</div>
-				</div>-->
-				<!--//mui-card-->
+
 			</div>
 		</div>
-		
+
 		<nav class="mui-bar mui-bar-tab no-border">
-			<a class=" mui-col-xs-12 mui-btn mui-btn-blue" onclick="toPay()">
+			<a class=" mui-col-xs-12 mui-btn mui-btn-blue" onclick="toOrderconfirm()">
 				立刻购买
 			</a>
 		</nav>
 		<script type="text/javascript" charset="utf-8">
+					function toOrderconfirm() {
+				console.log("到订单确认");
+				wx.miniProgram.navigateTo({
+					url: '/pages/orderconfirm/orderconfirm?'
+				})
+			}
 		
 			var vue1 = new Vue({
 				el: '#content',
 				data: {
 					data: {
-						goods:{}
+						goods: {}
 					}
 				},
 				updated: function() {
@@ -194,15 +153,16 @@
 				},
 				methods: {
 					toNavigation: function(goods) {
+						console.log(goods);
 						console.log("到导航页");
-						myLocalStorage.setItem("goods",goods)
+						myLocalStorage.setItem("goods", goods)
 						wx.miniProgram.navigateTo({
 							url: '/pages/navigation/navigation'
 						})
 					},
 					toDetail: function(id) {
 						console.log("到详情页");
-						myLocalStorage.setItem("lineid",id)
+						myLocalStorage.setItem("lineid", id)
 						wx.miniProgram.navigateTo({
 							url: '/pages/detail/detail'
 						})
@@ -218,13 +178,15 @@
 						'Content-Type': 'application/json',
 						'token': myLocalStorage.getItem("token")
 					},
-					url: basePath + "services/xcx/goods/"+myLocalStorage.getItem("goodsId")+"/detail",
-					data:{},
+					url: basePath + "services/xcx/goods/" + myLocalStorage.getItem("goodsId") + "/detail",
+					data: {},
 					success: function(res) {
 						if(res.status == 0) {
-//							res.result.cover = res.result.cover+","+res.result.cover
-							vue1.data.goods =res.result;
+							vue1.data.goods = res.result;
 						} else {
+							mui.toast(
+								mui.toast(res.errmsg)
+							)
 						}
 					},
 					error: function(result) {
@@ -233,13 +195,6 @@
 				});
 			}
 
-
-			function toPay(){
-				console.log("支付");
-				wx.miniProgram.navigateTo({
-					url: '/pages/utils/pay?'
-				})
-			}
 
 			$(function() {
 				loadGoodsDetail();

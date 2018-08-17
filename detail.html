@@ -1,253 +1,275 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="utf-8">
-		<!--<title>讲解详情</title>-->
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<!--标准mui.css-->
-		<link rel="stylesheet" href="css/mui.min.css">
-		<link rel="stylesheet" href="css/style.css">
-		<link rel="stylesheet" href="css/font-awesome.css">
-		<!--App自定义的css-->
-		<link rel="stylesheet" type="text/css" href="css/app.css" />
-		<script src="js/mui.min.js"></script>
-		<script src="js/jquery.min.js"></script>
-		<script src="js/app.js"></script>
-		<script src="js/vue.min.js"></script>
-		<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
-	</head>
+<head>
+	<meta charset="utf-8">
+	<title>讲解详情</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="css/mui.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/font-awesome.css">
+	<!--App自定义的css-->
+	<link rel="stylesheet" type="text/css" href="css/app.css" />
+	<script src="js/mui.min.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=8OUBz45oROYf20Vs5aOq7YpDGtPxSm7a"></script>
+	<style>
+		.anchorBL {
+			display: none;
+		}
+	</style>
+</head>
 
-	<body>
+<body>
 
-<!--		<header class="mui-bar mui-bar-nav">
+	<!--		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">CK小镇浪漫童话之旅</h1>
 		</header>-->
-		<nav class="mui-bar mui-bar-tab">
-			<a class=" mui-btn mui-btn-blue mui-col-xs-12" onclick="toRadio()">
-				<i class="fa fa-play-circle-o"></i>试听
-			</a>
-		</nav>
-		<div class="mui-content detail" id="content" v-cloak>
-			<img :src="data.audiopic" class=" img-responsive" />
-			<div class="mui-table-view">
-				<div class="mui-media">
-					<h4>{{data.linename}}</h4>
-					<div class="mui-inline" v-if="data.labels != null">
-						<span v-for="item in data.labels.split(',')">{{item}}</span>
-					</div>
-					<div class="icons mui-inline">
-						<i data-index="1" class="fa" :class="data.score>=10?'fa-star':'fa-star-o'"></i>
-						<i data-index="2" class="fa" :class="data.score>=20?'fa-star':'fa-star-o'"></i>
-						<i data-index="3" class="fa" :class="data.score>=30?'fa-star':'fa-star-o'"></i>
-						<i data-index="4" class="fa" :class="data.score>=40?'fa-star':'fa-star-o'"></i>
-						<i data-index="5" class="fa" :class="data.score>=50?'fa-star':'fa-star-o'"></i>
-					</div>
-					<p>{{data.cityName}}</p>
-					<div class=" mui-col-sm-12">
-						<span><i class=" fa fa-map-marker"></i>{{data.preonline}}</span>
-						<span><i class="fa fa-clock-o"></i>{{data.timelabel}}min</span>
-						<span><i class="fa fa-headphones"></i>{{data.visits}}</span>
-					</div>
+	<nav class="mui-bar mui-bar-tab">
+		<a class=" mui-btn mui-btn-blue mui-col-xs-12" onclick="toRadio()">
+			<i class="fa fa-play-circle-o"></i>试听
+		</a>
+	</nav>
+	<div class="mui-content detail" id="content">
+		<img :src="data.audiopic" class=" img-responsive" />
+		<div class="mui-table-view">
+			<div class="mui-media">
+				<h4>{{data.linename}}</h4>
+				<div class="mui-inline" v-if="data.labels != null">
+					<span v-for="item in data.labels.split(',')">{{item}}</span>
 				</div>
-
-				<div class="mui-media" v-if="data.guide != null">
-					<div class="mui-media-object mui-pull-left pos-rel"><img src="images/raw_1531745438.png" class=" img-circle img-responsive">
-						<div class="pos-abs">V</div>
-					</div>
-					<div class="mui-media-body">
-						<h5>{{data.guide.realname}}</h5>
-						<p class="red">{{data.guide.certificate}}</p>
-					</div>
-					<div class="mui-clearfix"></div>
-					<p>{{data.guide.introduction}}</p>
-				</div>
-
-				<div class="mui-media" v-if="data.records != null">
-					<h4>讲解点<span>{{data.records.length}}个讲解点</span></h4>
-					<template v-for="records in doubleRecords">
-						<div class="mui-col-xs-12">
-							<a class=" mui-col-xs-4 mui-pull-left" v-for="item in records">
-								<img :src="item.spotpictures" class=" img-rounded img-responsive" />{{item.spotname}}
-							</a>
-						</div>
-						<div class="mui-clearfix"></div>
-					</template>
-					<div class="mui-col-xs-12 map">
-						<img :src="data.thumbs" class=" img-responsive" />
-					</div>
-				</div>
-
-			</div>
-
-			<div class="comment mui-table-view">
-				<h4>用户点评</h4>
 				<div class="icons mui-inline">
-					{{data.score/10}}
 					<i data-index="1" class="fa" :class="data.score>=10?'fa-star':'fa-star-o'"></i>
 					<i data-index="2" class="fa" :class="data.score>=20?'fa-star':'fa-star-o'"></i>
 					<i data-index="3" class="fa" :class="data.score>=30?'fa-star':'fa-star-o'"></i>
 					<i data-index="4" class="fa" :class="data.score>=40?'fa-star':'fa-star-o'"></i>
 					<i data-index="5" class="fa" :class="data.score>=50?'fa-star':'fa-star-o'"></i>
 				</div>
-				<p>{{data.commentnum}}点评</p>
-				<div class=" mui-col-xs-12">
-					<div class="commentbox" v-for="item in data.comments">
-						<div class="mui-media-object mui-pull-left pos-rel">
-							<img :src="item.headimg" class=" img-circle img-responsive">
+				<p>{{data.cityName}}</p>
+				<div class=" mui-col-sm-12">
+					<span>
+						<i class=" fa fa-map-marker"></i>{{data.recordcount}}</span>
+					<span>
+						<i class="fa fa-clock-o"></i>{{data.timelabel}}min</span>
+					<span>
+						<i class="fa fa-headphones"></i>{{data.visits}}</span>
+				</div>
+			</div>
+
+			<div class="mui-media" v-if="data.guide != null">
+				<div class="mui-media-object mui-pull-left pos-rel">
+					<img :src="data.guide.headimg" class=" img-circle img-responsive">
+					<div class="pos-abs">V</div>
+				</div>
+				<div class="mui-media-body">
+					<h5>{{data.guide.realname}}</h5>
+					<p class="red">{{data.guide.certificate}}</p>
+				</div>
+				<div class="mui-clearfix"></div>
+				<p>{{data.guide.introduction}}</p>
+			</div>
+
+			<div class="mui-media" v-if="data.records != null">
+				<h4>讲解点
+					<span>{{data.records.length}}个讲解点</span>
+				</h4>
+				<template v-for="records in doubleRecords">
+					<div class="mui-col-xs-12">
+						<a class=" mui-col-xs-4 mui-pull-left" v-for="item in records">
+							<img :src="item.spotpictures" class=" img-rounded img-responsive" />{{item.spotname}}
+						</a>
+					</div>
+					<div class="mui-clearfix"></div>
+				</template>
+				<div class="mui-col-xs-12 map"  id="allmap" style="height:500px;width:100%">
+				</div>
+			</div>
+
+		</div>
+
+		<div class="comment mui-table-view">
+			<h4>用户点评</h4>
+			<div class="icons mui-inline" v-show="data.score">
+				{{data.score/10}}
+				<i data-index="1" class="fa" :class="data.score>=10?'fa-star':'fa-star-o'"></i>
+				<i data-index="2" class="fa" :class="data.score>=20?'fa-star':'fa-star-o'"></i>
+				<i data-index="3" class="fa" :class="data.score>=30?'fa-star':'fa-star-o'"></i>
+				<i data-index="4" class="fa" :class="data.score>=40?'fa-star':'fa-star-o'"></i>
+				<i data-index="5" class="fa" :class="data.score>=50?'fa-star':'fa-star-o'"></i>
+			</div>
+			<p>{{data.commentnum}}点评</p>
+			<div class=" mui-col-xs-12">
+				<div class="commentbox" v-for="item in data.comments">
+					<div class="mui-media-object mui-pull-left pos-rel">
+						<img :src="item.headimg" class=" img-circle img-responsive">
+					</div>
+					<div class="mui-media-body">
+						<h5>{{item.realname}}
+							<span>{{item.time}}</span>
+						</h5>
+						<div class="icons mui-inline">
+							<i data-index="1" class="fa" :class="item.score>=10?'fa-star':'fa-star-o'"></i>
+							<i data-index="2" class="fa" :class="item.score>=20?'fa-star':'fa-star-o'"></i>
+							<i data-index="3" class="fa" :class="item.score>=30?'fa-star':'fa-star-o'"></i>
+							<i data-index="4" class="fa" :class="item.score>=40?'fa-star':'fa-star-o'"></i>
+							<i data-index="5" class="fa" :class="item.score>=50?'fa-star':'fa-star-o'"></i>
 						</div>
-						<div class="mui-media-body">
-							<h5>{{item.realname}}<span>{{item.time}}</span></h5>
-							<div class="icons mui-inline">
-								<i data-index="1" class="fa" :class="item.score>=10?'fa-star':'fa-star-o'"></i>
-								<i data-index="2" class="fa" :class="item.score>=20?'fa-star':'fa-star-o'"></i>
-								<i data-index="3" class="fa" :class="item.score>=30?'fa-star':'fa-star-o'"></i>
-								<i data-index="4" class="fa" :class="item.score>=40?'fa-star':'fa-star-o'"></i>
-								<i data-index="5" class="fa" :class="item.score>=50?'fa-star':'fa-star-o'"></i>
+					</div>
+					<p>{{item.comment}}</p>
+				</div>
+			</div>
+			<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 " v-on:click="toComment(data.lineid)">
+				查看全部用户点评
+			</button>
+		</div>
+		<div class="comment question mui-table-view">
+			<h4>用户提问</h4>
+			<p>点评</p>
+			<div class=" mui-col-xs-12">
+				<div class="commentbox" v-for="item in data.questions">
+					<div class="mui-media-object mui-pull-left pos-rel">
+						<img :src="item.touristFace" class=" img-circle img-responsive">
+					</div>
+					<div class="mui-media-body">
+						<h5>{{item.touristName}}
+							<span>{{item.createtime}}</span>
+						</h5>
+					</div>
+					<p>{{item.question}}</p>
+					<div class="answer" v-show="item.answer != null">
+						答:
+						<div class="answerbox" v-on:click="play">
+							<div class="app-voice-you">
+								<div class="app-voice-state app-voice-pause"></div>
+								<div class="app-voice-time">
+									5s</div>
 							</div>
+							<audio :src="item.answer" hidden='true' controls>
+							</audio>
 						</div>
-						<p>{{item.comment}}</p>
+						<span class=" mui-pull-right">人收听</span>
 					</div>
 				</div>
-				<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 " v-on:click="toComment(data.lineid)">
-					查看全部用户点评
-				</button>
-			</div>
-			<div class="comment question mui-table-view">
-				<h4>用户提问</h4>
-				<p>点评</p>
-				<div class=" mui-col-xs-12">
-					<div class="commentbox" v-for="item in data.questions">
-						<div class="mui-media-object mui-pull-left pos-rel"><img :src="item.touristFace" class=" img-circle img-responsive">
-						</div>
-						<div class="mui-media-body">
-							<h5>{{item.touristName}}<span>{{item.createtime}}</span></h5>
-						</div>
-						<p>{{item.question}}</p>
-						<div class="answer">
-							答:
-							<div class="answerbox" v-on:click="play">
-								<div class="app-voice-you">
-									<div class="app-voice-state app-voice-pause"></div>
-									<div class="app-voice-time">
-										5s</div>
-								</div>
-								<audio src="http://cncdn.imguider.com/upload/records/20170717/3588a165-10c9-41cc-b0b0-4b0c328758ef.mp3" hidden='true' controls >
-								</audio>
-							</div>
-							<span class=" mui-pull-right">人收听</span>
-						</div>
-					</div>
-					<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 " v-on:click="toQuestion(data.lineid)">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-col-xs-10 " v-on:click="toQuestion(data.lineid)">
 					查看全部用户提问
 				</button>
-				</div>
 			</div>
 		</div>
-		<script type="text/javascript">
-			//			alert(myLocalStorage.getItem("lineid"));
 
-			function toRadio() {
-				wx.miniProgram.navigateTo({
-					url: '/pages/map/map'
+	</div>
+	
+
+	<script type="text/javascript">
+
+		function toRadio() {
+			wx.miniProgram.navigateTo({
+				url: '/pages/map/map'
+			})
+		}
+
+		var vue1 = new Vue({
+			el: '#content',
+			data: {
+				data: {},
+				doubleRecords: []
+			},
+			updated: function () {
+				this.$nextTick(function () {
+					var city = myLocalStorage.getItem("city");
+					var map = new BMap.Map("allmap"); // 创建Map实例
+					map.centerAndZoom(new BMap.Point(city.lng,city.lat), 11); // 初始化地图,设置中心点坐标和地图级别
+					map.setCurrentCity(city.name); // 设置地图显示的城市 此项是必须设置的
 				})
-			}
-
-			var vue1 = new Vue({
-				el: '#content',
-				data: {
-					data: {},
-					doubleRecords:[]
-				},
-				updated: function() {
-					this.$nextTick(function() {
+			},
+			methods: {
+				toComment: function (lineid) {
+					console.log("跳转到所有comment");
+					myLocalStorage.setItem("lineid", lineid);
+					wx.miniProgram.navigateTo({
+						url: '/pages/comment/comment'
 					})
 				},
-				methods: {
-					toComment:function(lineid) {
-						console.log("跳转到所有comment");
-						myLocalStorage.setItem("lineid",lineid);
-						wx.miniProgram.navigateTo({
-							url: '/pages/comment/comment'
-						})
-					},
-					toQuestion:function(lineid) {
-						console.log("跳转到所有question");
-						myLocalStorage.setItem("lineid",lineid);
-						wx.miniProgram.navigateTo({
-							url: '/pages/question/question'
-						})
-					},
-					play:function(e){
-//						console.log($(e.target).children("audio"));
-						var audio = $(e.currentTarget).find("audio")[0];//转换成dom
-						if($(e.currentTarget).find(".app-voice-state").hasClass("app-voice-play")) {
-							$(e.currentTarget).find(".app-voice-state").addClass("app-voice-pause");
-							$(e.currentTarget).find(".app-voice-state").removeClass("app-voice-play")
-							audio.pause();
-						} else {
-							//停止其他的audio
-							$("audio").not(audio).each(function(){
-								this.pause();
-							})
-							$(".app-voice-state").removeClass("app-voice-play");
-							$(".app-voice-state").addClass("app-voice-pause");
-							$(e.currentTarget).find(".app-voice-state").removeClass("app-voice-pause");
-							$(e.currentTarget).find(".app-voice-state").addClass("app-voice-play")
-							audio.play();
-						}
-					}
+				toQuestion: function (lineid) {
+					console.log("跳转到所有question");
+					myLocalStorage.setItem("lineid", lineid);
+					wx.miniProgram.navigateTo({
+						url: '/pages/question/question'
+					})
 				},
-				watch:{
-					data:function(){//组装二维数组，由于页面4，4，4的排列方式，需要用二维数组解析
-						var self = this;
-						var records = self.data.records;
-						var num = 3;//每个子数组里的元素个数;
-						var Arr = new Array(Math.ceil(records.length/num));
-						for(var i = 0; i<Arr.length;i++){
-					        Arr[i] = new Array();
-					        for(var j = 0; j<num; j++){
-					        	Arr[i][j] = '';
-					        }
-				        }
-						for(var i = 0; i<records.length;i++){
-				        	Arr[parseInt(i/num)][i%num] = records[i]; 
-				        } 
-						self.doubleRecords = Arr;
+				play: function (e) {
+					//						console.log($(e.target).children("audio"));
+					var audio = $(e.currentTarget).find("audio")[0]; //转换成dom
+					if ($(e.currentTarget).find(".app-voice-state").hasClass("app-voice-play")) {
+						$(e.currentTarget).find(".app-voice-state").addClass("app-voice-pause");
+						$(e.currentTarget).find(".app-voice-state").removeClass("app-voice-play")
+						audio.pause();
+					} else {
+						//停止其他的audio
+						$("audio").not(audio).each(function () {
+							this.pause();
+						})
+						$(".app-voice-state").removeClass("app-voice-play");
+						$(".app-voice-state").addClass("app-voice-pause");
+						$(e.currentTarget).find(".app-voice-state").removeClass("app-voice-pause");
+						$(e.currentTarget).find(".app-voice-state").addClass("app-voice-play")
+						audio.play();
 					}
 				}
-			});
-
-			function loadLineDetail() {
-				$.ajax({
-					dataType: "json",
-					type: "get",
-					headers: {
-						'Content-Type': 'application/json',
-						'token': myLocalStorage.getItem("token")
-					},
-					url: basePath + "services/lineinfo/" + myLocalStorage.getItem("lineid"),
-					data: {},
-					success: function(res) {
-						if(res.status == 0) {
-							vue1.data = res.result;
-						} else {
-							mui.toast(res.errmsg)
+			},
+			watch: {
+				data: function () { //组装二维数组，由于页面4，4，4的排列方式，需要用二维数组解析
+					var self = this;
+					var records = self.data.records;
+					var num = 3; //每个子数组里的元素个数;
+					var Arr = new Array(Math.ceil(records.length / num));
+					for (var i = 0; i < Arr.length; i++) {
+						Arr[i] = new Array();
+						for (var j = 0; j < num; j++) {
+							Arr[i][j] = '';
 						}
-					},
-					error: function(result) {
-						mui.toast("请求遇到问题!")
 					}
-				});
+					for (var i = 0; i < records.length; i++) {
+						Arr[parseInt(i / num)][i % num] = records[i];
+					}
+					self.doubleRecords = Arr;
+				}
 			}
+		});
 
-			$(function() {
-				loadLineDetail();
-			})
-		</script>
-	</body>
+		function loadLineDetail() {
+			$.ajax({
+				dataType: "json",
+				type: "get",
+				headers: {
+					'Content-Type': 'application/json',
+					'token': myLocalStorage.getItem("token")
+				},
+				url: basePath + "services/lineinfo/4982062d-ecc0-45a7-b379-4333ee3c9853",
+				data: {},
+				success: function (res) {
+					if (res.status == 0) {
+						vue1.data = res.result;
+					} else {
+						mui.toast(res.errmsg)
+					}
+				},
+				error: function (result) {
+					mui.toast("请求遇到问题!")
+				}
+			});
+		}
+
+		$(function () {
+			loadLineDetail();
+		})
+	</script>
+</body>
 
 </html>

@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<!--<title>导航</title>-->
+		<title>导航</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -19,9 +19,13 @@
 		<script src="js/app.js"></script>
 		<script src="js/vue.min.js"></script>
 		<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
-		<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=CAZBZ-4TR6O-QKNWH-SNA42-KKXDV-GQBNR"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=8OUBz45oROYf20Vs5aOq7YpDGtPxSm7a"></script>
 		<style>
-			.smnoprint{
+			.smnoprint {
+				display: none;
+			}
+			
+			.anchorBL {
 				display: none;
 			}
 		</style>
@@ -33,7 +37,7 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">CK小镇浪漫童话之旅</h1>
 		</header>-->
-		<nav class="mui-bar mui-bar-tab no-border">
+		<nav class="mui-bar mui-bar-tab no-border" id="nav">
 			<div class="mui-slider navigation">
 				<div class="pos-fix">
 					<a><i class=" fa fa-bullseye"></i></a>
@@ -41,74 +45,99 @@
 				<div class="mui-slider-group ">
 					<div class="mui-slider-item ">
 						<div class="mui-slider-box pos-rel">
-							<h5>1.观景台--三维地图</h5>
+							<h5>{{data.title}}--三维地图</h5>
 							<div class="pos-abs location">
-								<a  ><i class=" fa fa-location-arrow"></i></a>
+								<a v-on:click="navigation"><i class=" fa fa-location-arrow"></i></a>
 							</div>
 						</div>
 					</div>
-					<!--<div class="mui-slider-item">
-						1777680780
-					</div>
-					<div class="mui-slider-item">
-						1777680780
-					</div>-->
 				</div>
 			</div>
 			</div>
 			</div>
 		</nav>
 		<div class="mui-content">
-			<div id="container" ></div>
-			<!--<div style='width: 500px; height: 180px' id="infoDiv"></div>-->
+			<div id="allmap"></div>
 		</div>
-		
+
 		<script type="text/javascript">
-			$("#container").height($(window).height() - $("header").height() - $(".mui-bar-tab").height())
+			//设置高度
+			$("#allmap").height($(window).height() - $("#nav").height())
+			var map = new BMap.Map("allmap"); // 创建Map实例
+			// 百度地图API功能
+			var map = new BMap.Map("allmap");
 
+			var vue1 = new Vue({
+				el: '#nav',
+				data: {
+					data: {}
+				},
+				updated: function() {
+					this.$nextTick(function() {})
+				},
+				methods: {
+					navigation: function() {
+						var geolocation = new BMap.Geolocation();
+						geolocation.getCurrentPosition(function(r) {
+							if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+//								var mk = new BMap.Marker(r.point);
+//								map.addOverlay(mk);
+								var latCurrent = r.point.lat;
+								var lngCurrent = r.point.lng;
+								location.href = "http://api.map.baidu.com/direction?origin=" +latCurrent + "," + lngCurrent +
+									"&destination=" + vue1.data.lat + "," + vue1.data.lng +
+									"&mode=driving&title=" + vue1.data.title +
+									"&region=" + vue1.data.title + "&output=html";
+							} else {
+								mui.toast("无法获取您的位置！")
+							}
+						}, {
+							enableHighAccuracy: true
+						})
+					}
+				},
+				watch: {
+					"data": function(data) {
+						var city = myLocalStorage.getItem("city");
+						map.centerAndZoom(new BMap.Point(data.lng,data.lat), 11); // 初始化地图,设置中心点坐标和地图级别
+						map.setCurrentCity(city.name); // 设置地图显示的城市 此项是必须设置的
+						var point = new BMap.Point(data.lng, data.lat);
+						map.centerAndZoom(point, 15);
+						var marker = new BMap.Marker(point); // 创建点
+						map.addOverlay(marker);
+					}
+				}
+			});
+			
+			function loadGoodsDetail() {
+				$.ajax({
+					dataType: "json",
+					type: "get",
+					headers: {
+						'Content-Type': 'application/json',
+						'token': myLocalStorage.getItem("token")
+					},
+					url: basePath + "services/xcx/goods/1/detail",
+					data: {},
+					success: function(res) {
+						if(res.status == 0) {
+							vue1.data = res.result;
+						} else {
+							mui.toast(
+								mui.toast(res.errmsg)
+							)
+						}
+					},
+					error: function(result) {
+						mui.toast("请求遇到问题!")
+					}
+				});
+			}
 
-        var center = new qq.maps.LatLng(39.916527, 116.397128);
-        var map = new qq.maps.Map(document.getElementById("container"), {
-            center: center
-          	//zoom: 15
-        });
-         //设置获取驾车线路方案的服务
-        var drivingService = new qq.maps.DrivingService({
-            map: map
-            //展现结果
-//          panel: document.getElementById('infoDiv')
-        });
-         //设置搜索地点信息、驾车方案等属性
-        function search() {
-        	var start = new qq.maps.LatLng(39.996017,116.386970);
-			var end = new qq.maps.LatLng(39.910344,116.394095);
-//          var start = "北京南站";
-//          var end = "天坛公园";
-            var policy = "LEAST_DISTANCE"//LEAST_TIME最少时间、LEAST_DISTANCE最短距离、AVOID_HIGHWAYS避开高速、REAL_TRAFFIC实时路况、PREDICT_TRAFFIC预测路况
-            //设置驾车方案
-            drivingService.setPolicy(qq.maps.DrivingPolicy[policy]);
-            //设置驾车的区域范围
-            drivingService.setLocation("北京");
-            //设置回调函数
-            drivingService.setComplete(function(result) {
-                if (result.type == qq.maps.ServiceResultType.MULTI_DESTINATION) {
-                    //alert("起终点不唯一");
-                    var d = result.detail;
-                    drivingService.search(d.start[0], d.end[0]);
-                }
-            });
-            //设置检索失败回调函数
-            drivingService.setError(function(data) {
-            	mui.toast(data);
-            });
-            //设置驾驶路线的起点和终点
-            drivingService.search(start, end);
-        }
-        
-        mui.ready(function(){
-        	search();
-        })
-				
+			//设置搜索地点信息、驾车方案等属性
+			$(function() {
+				loadGoodsDetail();
+			})
 		</script>
 	</body>
 
